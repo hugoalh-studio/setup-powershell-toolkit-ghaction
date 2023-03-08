@@ -1,6 +1,6 @@
 name: "Setup PowerShell Toolkit"
 author: "hugoalh Studio"
-description: "Setup PowerShellGallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit`."
+description: "Setup PowerShell Gallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit`."
 inputs:
   toolkit_version:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."

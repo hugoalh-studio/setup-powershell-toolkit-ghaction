@@ -16,7 +16,7 @@
 
 ## 📝 Description
 
-A GitHub Action to setup PowerShellGallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit`.
+A GitHub Action to setup PowerShell Gallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
 
 ## 📚 Documentation
 
@@ -54,10 +54,14 @@ jobs:
 ```yml
 jobs:
   job_id:
-    name: "Setup PowerShell Toolkit"
+    name: "Hello World"
     runs-on: "ubuntu-latest"
     steps:
       - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.0.0"
+      - run: |
+          Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
+          Write-GitHubActionsNotice -Message 'Hello, world!'
+        shell: "pwsh"
 ```
 
 ### Guide
