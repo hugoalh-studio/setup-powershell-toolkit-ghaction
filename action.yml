@@ -49,7 +49,7 @@ runs:
     - name: "Setup PowerShell Module `hugoalh.GitHubActionsToolkit`"
       run: |
         [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
-        [SemVer]$PSToolkitVersion = [SemVer]::Parse($Env:INPUT_TOOLKIT_VERSION)
+        [SemVer]$PSToolkitVersion = [SemVer]::Parse(($Env:INPUT_TOOLKIT_VERSION))
         Try {
           $PSModuleToolkitMeta = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit'
           If ($PSModuleToolkitMeta.Version -ine $PSToolkitVersion) {
