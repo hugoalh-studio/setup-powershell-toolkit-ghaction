@@ -57,7 +57,7 @@ jobs:
     name: "Hello World"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.0.0"
+      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.0.1"
       - run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Write-GitHubActionsNotice -Message 'Hello, world!'
