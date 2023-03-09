@@ -43,7 +43,7 @@ jobs:
 
 #### `toolkit_version`
 
-**\[Optional\]** `<SemVer = '1.2.1'>` PowerShell module `hugoalh.GitHubActionsToolkit` target version; Default value will always change to the latest stable version.
+**\[Optional\]** `<SemVer = '1.2.3'>` PowerShell module `hugoalh.GitHubActionsToolkit` target version; Default value will always change to the latest stable version.
 
 ### 📤 Output
 

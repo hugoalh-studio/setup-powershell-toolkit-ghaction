@@ -5,7 +5,7 @@ inputs:
   toolkit_version:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
-    default: "1.2.1"
+    default: "1.2.3"
 runs:
   using: "composite"
   steps:
