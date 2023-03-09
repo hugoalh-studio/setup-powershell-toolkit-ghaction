@@ -20,7 +20,7 @@ A GitHub Action to setup PowerShell Gallery, PowerShellGet, and PowerShell modul
 
 ## 📚 Documentation
 
-> **⚠ Important:** This documentation is v1.0.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
+> **⚠ Important:** This documentation is v1.0.1 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
 ### Getting Started
 
