@@ -41,6 +41,10 @@ jobs:
 
 ### 📥 Input
 
+#### `toolkit_setup`
+
+**\[Optional\]** `<Boolean = True>` Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`. When this input is `False`, will ignore input [`toolkit_version`](#toolkit_version).
+
 #### `toolkit_version`
 
 **\[Optional\]** `<SemVer = '1.2.3'>` PowerShell module `hugoalh.GitHubActionsToolkit` target version; Default value will always change to the latest stable version.
