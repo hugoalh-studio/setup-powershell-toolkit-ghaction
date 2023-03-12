@@ -2,6 +2,10 @@ name: "Setup PowerShell Toolkit"
 author: "hugoalh Studio"
 description: "Setup PowerShell Gallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit`."
 inputs:
+  toolkit_setup:
+    description: "{Boolean} Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`."
+    required: false
+    default: "True"
   toolkit_version:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
@@ -9,6 +13,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: "Check Input `toolkit_setup`"
+      if: "${{inputs.toolkit_setup != 'False' && inputs.toolkit_setup != 'True'}}"
+      run: |
+        Write-Host -Object '::error::TypeError: Input `toolkit_setup` must be type of boolean!'
+        Exit 1
+      shell: "pwsh"
     - name: "Check PowerShell"
       run: |
         [SemVer]$PSVersionCurrent = $PSVersionTable.PSVersion
