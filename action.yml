@@ -10,6 +10,10 @@ inputs:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
     default: "1.2.3"
+  toolkit_allowprerelease:
+    description: "{Boolean} Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version."
+    required: false
+    default: "False"
 runs:
   using: "composite"
   steps:
@@ -17,6 +21,12 @@ runs:
       if: "${{inputs.toolkit_setup != 'False' && inputs.toolkit_setup != 'True'}}"
       run: |
         Write-Host -Object '::error::TypeError: Input `toolkit_setup` must be type of boolean!'
+        Exit 1
+      shell: "pwsh"
+    - name: "Check Input `toolkit_allowprerelease`"
+      if: "${{inputs.toolkit_allowprerelease != 'False' && inputs.toolkit_allowprerelease != 'True'}}"
+      run: |
+        Write-Host -Object '::error::TypeError: Input `toolkit_allowprerelease` must be type of boolean!'
         Exit 1
       shell: "pwsh"
     - name: "Check PowerShell"
@@ -61,6 +71,7 @@ runs:
       run: |
         [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
         [SemVer]$PSToolkitVersion = [SemVer]::Parse('${{inputs.toolkit_version}}')
+        [Boolean]$PSToolkitAllowPreRelease = [Boolean]::Parse('${{inputs.toolkit_allowprerelease}}')
         Try {
           $PSModuleToolkitMeta = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit'
           If ($PSModuleToolkitMeta.Version -ine $PSToolkitVersion) {
@@ -68,7 +79,7 @@ runs:
           }
         }
         Catch {
-          Install-Module -Name 'hugoalh.GitHubActionsToolkit' -RequiredVersion $PSToolkitVersion -Scope 'CurrentUser' -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
+          Install-Module -Name 'hugoalh.GitHubActionsToolkit' -RequiredVersion $PSToolkitVersion -Scope 'CurrentUser' -AllowPrerelease:$PSToolkitAllowPreRelease -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
         }
       shell: "pwsh"
 branding:
