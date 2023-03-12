@@ -57,6 +57,7 @@ runs:
         }
       shell: "pwsh"
     - name: "Setup PowerShell Module `hugoalh.GitHubActionsToolkit`"
+      if: "${{inputs.toolkit_setup == 'True'}}"
       run: |
         [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
         [SemVer]$PSToolkitVersion = [SemVer]::Parse('${{inputs.toolkit_version}}')
