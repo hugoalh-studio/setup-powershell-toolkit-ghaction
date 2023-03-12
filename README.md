@@ -43,7 +43,7 @@ jobs:
 
 #### `toolkit_setup`
 
-**\[Optional\]** `<Boolean = True>` Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`. When this input is `False`, will ignore input [`toolkit_version`](#toolkit_version).
+**(>= v1.1.0) \[Optional\]** `<Boolean = True>` Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`. When this input is `False`, will ignore input [`toolkit_version`](#toolkit_version).
 
 #### `toolkit_version`
 
