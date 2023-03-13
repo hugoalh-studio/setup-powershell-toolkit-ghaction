@@ -13,6 +13,7 @@
 
 | **Versions** | **Status** | **Target - GitHub Actions Runner** | **Target - PowerShell** |
 |:-:|:-:|:-:|:-:|
+| v1.1.X | L | >= v2.297.0 | >= v7.2.0 |
 | v1.0.X | L | >= v2.297.0 | >= v7.2.0 |
 
 ## Report Vulnerability
