@@ -38,7 +38,7 @@ runs:
           Exit 1
         }
       shell: "pwsh"
-    - name: "Setup PowerShellGallery"
+    - name: "Setup PowerShell Gallery"
       run: |
         [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
         Try {
