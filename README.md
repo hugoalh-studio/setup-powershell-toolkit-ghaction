@@ -20,11 +20,13 @@ A GitHub Action to setup PowerShell Gallery, PowerShellGet, and PowerShell modul
 
 ## 📚 Documentation
 
+> **⚠ Important:** This documentation is v1.2.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
+
 ### Getting Started
 
 #### Install (For Self Host)
 
-- GitHub Actions Runner >= v2.297.0
+- GitHub Actions Runner >= v2.303.0
   - PowerShell >= v7.2.0
 
 #### Use
@@ -41,7 +43,7 @@ jobs:
 
 #### `toolkit_setup`
 
-**(>= v1.1.0) \[Optional\]** `<Boolean = True>` Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`. When this input is `False`, will ignore inputs:
+**\[Optional\]** `<Boolean = True>` Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`. When this input is `False`, will ignore inputs:
 
 - [`toolkit_version`](#toolkit_version)
 - [`toolkit_allowprerelease`](#toolkit_allowprerelease)
@@ -52,14 +54,14 @@ jobs:
 
 | **Versions** | **`toolkit_version` Default Value** |
 |:-:|:-:|
-| v1.1.1 | `"1.4.0"` |
+| v1.2.0 | `"1.4.0"` |
 | v1.1.0 | `"1.3.2"` |
 | v1.0.1 | `"1.2.3"` |
 | v1.0.0 | `"1.2.1"` |
 
 #### `toolkit_allowprerelease`
 
-**(>= v1.1.0) \[Optional\]** `<Boolean = False>` Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version.
+**\[Optional\]** `<Boolean = False>` Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version.
 
 ### 📤 Output
 
@@ -73,7 +75,7 @@ jobs:
     name: "Hello World"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.1.1"
+      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.2.0"
       - run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Write-GitHubActionsNotice -Message 'Hello, world!'
