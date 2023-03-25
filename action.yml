@@ -9,7 +9,7 @@ inputs:
   toolkit_version:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
-    default: "1.3.2"
+    default: "1.4.0"
   toolkit_allowprerelease:
     description: "{Boolean} Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version."
     required: false
@@ -18,13 +18,13 @@ runs:
   using: "composite"
   steps:
     - name: "Check Input `toolkit_setup`"
-      if: "${{(inputs.toolkit_setup != 'False') && (inputs.toolkit_setup != 'True')}}"
+      if: "${{inputs.toolkit_setup != 'False' && inputs.toolkit_setup != 'True'}}"
       run: |
         Write-Host -Object '::error::TypeError: Input `toolkit_setup` must be type of boolean!'
         Exit 1
       shell: "pwsh"
     - name: "Check Input `toolkit_allowprerelease`"
-      if: "${{(inputs.toolkit_allowprerelease != 'False') && (inputs.toolkit_allowprerelease != 'True')}}"
+      if: "${{inputs.toolkit_allowprerelease != 'False' && inputs.toolkit_allowprerelease != 'True'}}"
       run: |
         Write-Host -Object '::error::TypeError: Input `toolkit_allowprerelease` must be type of boolean!'
         Exit 1
@@ -40,7 +40,7 @@ runs:
       shell: "pwsh"
     - name: "Setup PowerShell Gallery"
       run: |
-        [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
+        [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         Try {
           $PSRepositoryPSGallery = Get-PSRepository -Name 'PSGallery'
         }
@@ -54,7 +54,7 @@ runs:
       shell: "pwsh"
     - name: "Setup PowerShellGet"
       run: |
-        [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
+        [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         [SemVer]$PowerShellGetMinimumVersion = [SemVer]::Parse('2.2.5')
         Try {
           $PSModulePowerShellGetMeta = Get-InstalledModule -Name 'PowerShellGet'
@@ -69,7 +69,7 @@ runs:
     - name: "Setup PowerShell Module `hugoalh.GitHubActionsToolkit`"
       if: "${{inputs.toolkit_setup == 'True'}}"
       run: |
-        [Boolean]$IsDebugMode = ($Env:RUNNER_DEBUG -ieq 1) -or ($Env:RUNNER_DEBUG -ieq 'True')
+        [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         [SemVer]$PSToolkitVersion = [SemVer]::Parse('${{inputs.toolkit_version}}')
         [Boolean]$PSToolkitAllowPreRelease = [Boolean]::Parse('${{inputs.toolkit_allowprerelease}}')
         Try {

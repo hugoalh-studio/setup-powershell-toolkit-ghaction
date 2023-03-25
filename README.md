@@ -48,10 +48,11 @@ jobs:
 
 #### `toolkit_version`
 
-**\[Optional\]** `<SemVer = "1.3.2">` PowerShell module `hugoalh.GitHubActionsToolkit` target version; Default value will always change to the latest stable version.
+**\[Optional\]** `<SemVer = "1.4.0">` PowerShell module `hugoalh.GitHubActionsToolkit` target version; Default value will always change to the latest stable version.
 
 | **Versions** | **`toolkit_version` Default Value** |
 |:-:|:-:|
+| v1.1.1 | `"1.4.0"` |
 | v1.1.0 | `"1.3.2"` |
 | v1.0.1 | `"1.2.3"` |
 | v1.0.0 | `"1.2.1"` |
@@ -72,7 +73,7 @@ jobs:
     name: "Hello World"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.1.0"
+      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.1.1"
       - run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Write-GitHubActionsNotice -Message 'Hello, world!'
