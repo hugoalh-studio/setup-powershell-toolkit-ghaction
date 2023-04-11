@@ -1,8 +1,7 @@
 # Setup PowerShell Toolkit (GitHub Action)
 
-[`SetupPowerShellToolkit.GitHubAction`](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction)
-
 ![License](https://img.shields.io/static/v1?label=License&message=MIT&style=flat-square "License")
+[![GitHub Repository](https://img.shields.io/badge/Repository-181717?logo=github&logoColor=ffffff&style=flat-square "GitHub Repository")](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction)
 [![GitHub Stars](https://img.shields.io/github/stars/hugoalh-studio/setup-powershell-toolkit-ghaction?label=Stars&logo=github&logoColor=ffffff&style=flat-square "GitHub Stars")](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/stargazers)
 [![GitHub Contributors](https://img.shields.io/github/contributors/hugoalh-studio/setup-powershell-toolkit-ghaction?label=Contributors&logo=github&logoColor=ffffff&style=flat-square "GitHub Contributors")](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/graphs/contributors)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/hugoalh-studio/setup-powershell-toolkit-ghaction?label=Issues&logo=github&logoColor=ffffff&style=flat-square "GitHub Issues")](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/issues)
@@ -22,7 +21,7 @@ A GitHub Action to setup PowerShell Gallery, PowerShellGet, and PowerShell modul
 
 > **⚠ Important:** This documentation is v1.2.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
-### Target
+### Getting Started
 
 - GitHub Actions Runner >= v2.303.0
   - PowerShell >= v7.2.0
