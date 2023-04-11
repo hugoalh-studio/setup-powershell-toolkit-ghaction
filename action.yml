@@ -63,8 +63,11 @@ runs:
         [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         [SemVer]$PowerShellGetMinimumVersion = [SemVer]::Parse('2.2.5')
         Try {
-          $PSModulePowerShellGetMeta = Get-InstalledModule -Name 'PowerShellGet'
-          If ($PSModulePowerShellGetMeta.Version -ilt $PowerShellGetMinimumVersion) {
+          $PSModulePowerShellGetMeta = (Get-PackageProvider -Name 'PowerShellGet' -ErrorAction 'SilentlyContinue') ?? (Get-InstalledModule -Name 'PowerShellGet' -ErrorAction 'SilentlyContinue')
+          If (
+            $Null -ieq $PSModulePowerShellGetMeta -or
+            $PSModulePowerShellGetMeta.Version -ilt $PowerShellGetMinimumVersion
+          ) {
             Throw
           }
         }
