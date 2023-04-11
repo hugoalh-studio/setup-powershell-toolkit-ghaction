@@ -22,14 +22,10 @@ A GitHub Action to setup PowerShell Gallery, PowerShellGet, and PowerShell modul
 
 > **⚠ Important:** This documentation is v1.2.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
-### Getting Started
-
-#### Install (For Self Host)
+### Target
 
 - GitHub Actions Runner >= v2.303.0
   - PowerShell >= v7.2.0
-
-#### Use
 
 ```yml
 jobs:
