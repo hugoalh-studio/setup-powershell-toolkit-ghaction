@@ -9,7 +9,7 @@ inputs:
   toolkit_version:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
-    default: "1.4.0"
+    default: "1.4.1"
   toolkit_allowprerelease:
     description: "{Boolean} Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version."
     required: false
@@ -23,6 +23,16 @@ runs:
         Write-Host -Object '::error::TypeError: Input `toolkit_setup` must be type of boolean!'
         Exit 1
       shell: "pwsh"
+    - name: "Check Input `toolkit_version`"
+      run: |
+        Try {
+          $Null = [SemVer]::Parse('${{inputs.toolkit_version}}')
+        }
+        Catch {
+          Write-Host -Object '::error::TypeError: Input `toolkit_version` must be type of SemVer!'
+          Exit 1
+        }
+      shell: "pwsh"
     - name: "Check Input `toolkit_allowprerelease`"
       if: "${{inputs.toolkit_allowprerelease != 'False' && inputs.toolkit_allowprerelease != 'True'}}"
       run: |
@@ -31,12 +41,8 @@ runs:
       shell: "pwsh"
     - name: "Check PowerShell"
       run: |
-        [SemVer]$PSVersionCurrent = $PSVersionTable.PSVersion
-        [SemVer]$PSVersionMinimum = [SemVer]::Parse('7.2.0')
-        If ($PSVersionCurrent -ilt $PSVersionMinimum) {
-          Write-Host -Object "::error::Require PowerShell minimum version is v$($PSVersionMinimum.ToString()), but current version is v$($PSVersionCurrent.ToString())!"
-          Exit 1
-        }
+        #Requires -PSEdition Core -Version 7.2
+        Exit 0
       shell: "pwsh"
     - name: "Setup PowerShell Gallery"
       run: |
