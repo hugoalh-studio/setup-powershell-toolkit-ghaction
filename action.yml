@@ -17,10 +17,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Setup Basic"
+    - name: "Check Elements"
       run: |
         #Requires -PSEdition Core -Version 7.2
-        [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         Try {
           $Null = [Boolean]::Parse('${{inputs.toolkit_setup}}')
         }
@@ -42,6 +41,11 @@ runs:
           Write-Host -Object '::error::TypeError: Input `toolkit_allowprerelease` must be type of boolean!'
           Exit 1
         }
+      shell: "pwsh"
+    - name: "Setup PowerShell Gallery"
+      run: |
+        #Requires -PSEdition Core -Version 7.2
+        [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         Try {
           $PSRepositoryPSGallery = Get-PSRepository -Name 'PSGallery'
         }
@@ -52,6 +56,11 @@ runs:
         If ($PSRepositoryPSGallery.InstallationPolicy -ine 'Trusted') {
           Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted' -Verbose:$IsDebugMode
         }
+      shell: "pwsh"
+    - name: "Setup PowerShellGet"
+      run: |
+        #Requires -PSEdition Core -Version 7.2
+        [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
         [SemVer]$PowerShellGetMinimumVersion = [SemVer]::Parse('2.2.5')
         Try {
           $PSModulePowerShellGetMeta = (
