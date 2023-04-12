@@ -49,7 +49,7 @@ jobs:
 
 | **Versions** | **`toolkit_version` Default Value** |
 |:-:|:-:|
-| v1.2.1 | `"1.4.1"` |
+| v1.2.1 \~ v1.2.2 | `"1.4.1"` |
 | v1.2.0 | `"1.4.0"` |
 | v1.1.0 | `"1.3.2"` |
 | v1.0.1 | `"1.2.3"` |
@@ -71,7 +71,7 @@ jobs:
     name: "Hello World"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.2.1"
+      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.2.2"
       - run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Write-GitHubActionsNotice -Message 'Hello, world!'
