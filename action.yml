@@ -9,7 +9,7 @@ inputs:
   toolkit_version:
     description: "{SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
-    default: "1.4.1"
+    default: "1.5.0"
   toolkit_allowprerelease:
     description: "{Boolean} Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version."
     required: false
