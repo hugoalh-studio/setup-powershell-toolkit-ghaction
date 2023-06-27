@@ -49,7 +49,7 @@ jobs:
 
 | **Versions** | **`toolkit_version` Default Value** |
 |:-:|:-:|
-| v1.2.3 | `"1.5.0"` |
+| v1.2.3 \~ v1.3.0 | `"1.5.0"` |
 | v1.2.1 \~ v1.2.2 | `"1.4.1"` |
 | v1.2.0 | `"1.4.0"` |
 | v1.1.0 | `"1.3.2"` |
@@ -73,7 +73,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Setup PowerShell Toolkit"
-        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.2.3"
+        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.3.0"
       - run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Write-GitHubActionsNotice -Message 'Hello, world!'
