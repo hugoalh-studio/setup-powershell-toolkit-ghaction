@@ -1,0 +1,22 @@
+name: "Test"
+on:
+  workflow_dispatch:
+jobs:
+  main:
+    name: "Main"
+    runs-on: "${{matrix.os}}"
+    strategy:
+      matrix:
+        os:
+          - "macos-latest"
+          - "ubuntu-latest"
+          - "windows-latest"
+      fail-fast: false
+    steps:
+      - name: "Setup PowerShell Toolkit"
+        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@main"
+      - name: "Test Toolkit"
+        run: |
+          Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
+          Write-GitHubActionsNotice -Message 'Hello, world!'
+        shell: "pwsh"
