@@ -24,7 +24,7 @@ runs:
         INPUT_TOOLKIT_VERSION: "${{inputs.toolkit_version}}"
         INPUT_TOOLKIT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease}}"
       run: |
-        sudo pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
+        sudo --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
       shell: "sh"
     - name: "Main (Windows)"
       if: "${{runner.os == 'Windows'}}"
