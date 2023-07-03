@@ -1,6 +1,6 @@
 #Requires -PSEdition Core -Version 7.2
 $Script:ErrorActionPreference = 'Stop'
-[Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq 1 -or $Env:RUNNER_DEBUG -ieq 'True'
+[Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq '1' -or $Env:RUNNER_DEBUG -ieq 'True'
 Try {
 	[Boolean]$InputToolkitSetup = [Boolean]::Parse($Env:INPUT_TOOLKIT_SETUP)
 }
