@@ -5,21 +5,21 @@ Try {
 	[Boolean]$InputToolkitSetup = [Boolean]::Parse($Env:INPUT_TOOLKIT_SETUP)
 }
 Catch {
-	Write-Host -Object '::error::TypeError: Input `toolkit_setup` must be type of boolean!'
+	Write-Host -Object '::error::Input `toolkit_setup` must be type of boolean!'
 	Exit 1
 }
 Try {
 	[SemVer]$InputToolkitVersion = [SemVer]::Parse($Env:INPUT_TOOLKIT_VERSION)
 }
 Catch {
-	Write-Host -Object '::error::TypeError: Input `toolkit_version` must be type of SemVer!'
+	Write-Host -Object '::error::Input `toolkit_version` must be type of SemVer!'
 	Exit 1
 }
 Try {
 	[Boolean]$InputToolkitAllowPreRelease = [Boolean]::Parse($Env:INPUT_TOOLKIT_ALLOWPRERELEASE)
 }
 Catch {
-	Write-Host -Object '::error::TypeError: Input `toolkit_allowprerelease` must be type of boolean!'
+	Write-Host -Object '::error::Input `toolkit_allowprerelease` must be type of boolean!'
 	Exit 1
 }
 Try {
