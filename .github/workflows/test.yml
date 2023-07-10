@@ -18,5 +18,6 @@ jobs:
       - name: "Test Toolkit"
         run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
+          Test-GitHubActionsEnvironment
           Write-GitHubActionsNotice -Message 'Hello, world!'
         shell: "pwsh"
