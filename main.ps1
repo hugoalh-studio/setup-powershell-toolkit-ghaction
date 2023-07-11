@@ -1,5 +1,6 @@
 #Requires -PSEdition Core -Version 7.2
 $Script:ErrorActionPreference = 'Stop'
+Write-Host -Object 'Initialize.'
 [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq '1' -or $Env:RUNNER_DEBUG -ieq 'True'
 [SemVer]$PowerShellGetVersionMaximum = [SemVer]::Parse('2.99999999.99999999')
 [SemVer]$PowerShellGetVersionMinimum = [SemVer]::Parse('2.2.5')
