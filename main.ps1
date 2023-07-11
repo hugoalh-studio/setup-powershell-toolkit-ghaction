@@ -59,7 +59,8 @@ Catch {
 If ($InputToolkitSetup) {
 	Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
 	If ($InputToolkitVersionLatest) {
-		Install-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'AllUsers' -AllowPrerelease:$InputToolkitAllowPreRelease -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode -PassThru |
+		Install-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'AllUsers' -AllowPrerelease:$InputToolkitAllowPreRelease -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
+		Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
 			Format-List |
 			Out-String -Width 120 |
 			Write-Host
