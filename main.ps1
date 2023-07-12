@@ -72,8 +72,10 @@ Catch {
 Try {
 	[String]$InputPowerShellGetVersionRaw = $Env:INPUT_POWERSHELLGET_VERSION
 	[Boolean]$InputPowerShellGetVersionLatest = $InputPowerShellGetVersionRaw -ieq 'Latest'
-	[String]$InputPowerShellGetVersionModifier = ($InputPowerShellGetVersionRaw -imatch $SemVerRangeRegEx) ? $Matches[0].Trim() : ''
-	[SemVer]$InputPowerShellGetVersionNumber = [SemVer]::Parse((($InputPowerShellGetVersionRaw -imatch $SemVerRangeRegEx) ? $InputPowerShellGetVersionRaw -ireplace "^$([RegEx]::Escape($Matches[0]))", '' : $InputPowerShellGetVersionRaw))
+	If (!$InputPowerShellGetVersionLatest) {
+		[String]$InputPowerShellGetVersionModifier = ($InputPowerShellGetVersionRaw -imatch $SemVerRangeRegEx) ? $Matches[0].Trim() : ''
+		[SemVer]$InputPowerShellGetVersionNumber = [SemVer]::Parse((($InputPowerShellGetVersionRaw -imatch $SemVerRangeRegEx) ? $InputPowerShellGetVersionRaw -ireplace "^$([RegEx]::Escape($Matches[0]))", '' : $InputPowerShellGetVersionRaw))
+	}
 }
 Catch {
 	Write-Host -Object '::error::Input `powershellget_version` must be `"Latest"` or type of SemVer!'
@@ -89,8 +91,10 @@ Catch {
 Try {
 	[String]$InputToolkitVersionRaw = $Env:INPUT_TOOLKIT_VERSION
 	[Boolean]$InputToolkitVersionLatest = $InputToolkitVersionRaw -ieq 'Latest'
-	[String]$InputToolkitVersionModifier = ($InputToolkitVersionRaw -imatch $SemVerRangeRegEx) ? $Matches[0].Trim() : ''
-	[SemVer]$InputToolkitVersionNumber = [SemVer]::Parse((($InputToolkitVersionRaw -imatch $SemVerRangeRegEx) ? $InputToolkitVersionRaw -ireplace "^$([RegEx]::Escape($Matches[0]))", '' : $InputToolkitVersionRaw))
+	If (!$InputToolkitVersionLatest) {
+		[String]$InputToolkitVersionModifier = ($InputToolkitVersionRaw -imatch $SemVerRangeRegEx) ? $Matches[0].Trim() : ''
+		[SemVer]$InputToolkitVersionNumber = [SemVer]::Parse((($InputToolkitVersionRaw -imatch $SemVerRangeRegEx) ? $InputToolkitVersionRaw -ireplace "^$([RegEx]::Escape($Matches[0]))", '' : $InputToolkitVersionRaw))
+	}
 }
 Catch {
 	Write-Host -Object '::error::Input `toolkit_version` must be `"Latest"` or type of SemVer!'
