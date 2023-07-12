@@ -18,7 +18,7 @@ Try {
 	[SemVer]$InputToolkitVersion = $InputToolkitVersionLatest ? [SemVer]::Parse('1.0.0-fake') : [SemVer]::Parse($InputToolkitVersionRaw)
 }
 Catch {
-	Write-Host -Object '::error::Input `toolkit_version` must be type of SemVer, or `"Latest"`!'
+	Write-Host -Object '::error::Input `toolkit_version` must be `"Latest"` or type of SemVer!'
 	Exit 1
 }
 Try {
