@@ -2,12 +2,20 @@ name: "Setup PowerShell Toolkit"
 author: "hugoalh Studio"
 description: "Setup PowerShell Gallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit`."
 inputs:
+  powershellget_setup:
+    description: "{Boolean} Whether to setup PowerShellGet."
+    required: false
+    default: "True"
+  powershellget_version:
+    description: "{String} PowerShellGet target version."
+    required: false
+    default: "Latest"
   toolkit_setup:
     description: "{Boolean} Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`."
     required: false
     default: "True"
   toolkit_version:
-    description: "{\"Latest\" | SemVer} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
+    description: "{String} PowerShell module `hugoalh.GitHubActionsToolkit` target version."
     required: false
     default: "Latest"
   toolkit_allowprerelease:
@@ -20,6 +28,8 @@ runs:
     - name: "Main (Non-Windows)"
       if: "${{runner.os != 'Windows'}}"
       env:
+        INPUT_POWERSHELLGET_SETUP: "${{inputs.powershellget_setup}}"
+        INPUT_POWERSHELLGET_VERSION: "${{inputs.powershellget_version}}"
         INPUT_TOOLKIT_SETUP: "${{inputs.toolkit_setup}}"
         INPUT_TOOLKIT_VERSION: "${{inputs.toolkit_version}}"
         INPUT_TOOLKIT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease}}"
@@ -29,6 +39,8 @@ runs:
     - name: "Main (Windows)"
       if: "${{runner.os == 'Windows'}}"
       env:
+        INPUT_POWERSHELLGET_SETUP: "${{inputs.powershellget_setup}}"
+        INPUT_POWERSHELLGET_VERSION: "${{inputs.powershellget_version}}"
         INPUT_TOOLKIT_SETUP: "${{inputs.toolkit_setup}}"
         INPUT_TOOLKIT_VERSION: "${{inputs.toolkit_version}}"
         INPUT_TOOLKIT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease}}"
