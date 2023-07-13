@@ -19,8 +19,14 @@ Function Install-ModuleTargetVersion {
 		Sort-Object |
 		Select-Object -Last 1
 	Try {
-		$ModuleMeta = Get-InstalledModule -Name $Name
-		If ($ModuleMeta.Version -ine $VersionTarget) {
+		$ModuleMeta = Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease
+		$ModuleMeta |
+			Select-Object -ExpandProperty 'Version' |
+			Where-Object -FilterScript { $_ -ine $VersionTarget } |
+			ForEach-Object -Process {
+				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
+			}
+		If ($ModuleMeta.Version -inotcontains $VersionTarget) {
 			Throw
 		}
 	}
@@ -94,7 +100,7 @@ Catch {
 	Write-Host -Object '::error::Input `allowprerelease` must be type of boolean!'
 	Exit 1
 }
-Write-Host -Object 'Tweak PowerShell repository configuration.'
+Write-Host -Object 'Check PowerShell repository configuration.'
 Try {
 	$PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
 }
@@ -130,10 +136,10 @@ Else {
 	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier $InputVersionModifier -VersionNumber $InputVersionNumber -AllowPrerelease:$InputAllowPreRelease
 }
 Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
-	Format-List |
+	Format-List -Property @('Version', 'PublishedDate', 'InstalledDate', 'UpdatedDate', 'Dependencies', 'RepositorySourceLocation', 'Repository', 'PackageManagementProvider', 'InstalledLocation') |
 	Out-String -Width 120 |
 	Write-Host
 If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
-	Write-Host -Object 'Restore PowerShell repository configuration.'
+	Write-Host -Object 'Restore PowerShell repository previous configuration.'
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy $PSRepositoryPSGalleryMeta.InstallationPolicy -Verbose:$IsDebugMode
 }
