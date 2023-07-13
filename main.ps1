@@ -1,7 +1,7 @@
 #Requires -PSEdition Core -Version 7.2
 $Script:ErrorActionPreference = 'Stop'
 Write-Host -Object 'Initialize.'
-[Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -ieq '1' -or $Env:RUNNER_DEBUG -ieq 'True'
+[Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -iin @('1', 'True')
 [RegEx]$SemVerModifierRegEx = '^(?:<|<=|=|>=|>|\^|~) *'
 Function Install-ModuleTargetVersion {
 	[CmdletBinding()]
@@ -76,7 +76,7 @@ Function Test-SemVerModifier {
 }
 Write-Host -Object 'Import input.'
 Try {
-	[String]$InputVersionRaw = $Env:INPUT_TOOLKIT_VERSION ?? $Env:INPUT_VERSION
+	[String]$InputVersionRaw = $Env:INPUT_VERSION
 	[Boolean]$InputVersionLatest = $InputVersionRaw -ieq 'Latest'
 	If (!$InputVersionLatest) {
 		[String]$InputVersionModifier = ($InputVersionRaw -imatch $SemVerModifierRegEx) ? $Matches[0].Trim() : ''
@@ -88,7 +88,7 @@ Catch {
 	Exit 1
 }
 Try {
-	[Boolean]$InputAllowPreRelease = [Boolean]::Parse(($Env:INPUT_TOOLKIT_ALLOWPRERELEASE ?? $Env:INPUT_ALLOWPRERELEASE))
+	[Boolean]$InputAllowPreRelease = [Boolean]::Parse($Env:INPUT_ALLOWPRERELEASE)
 }
 Catch {
 	Write-Host -Object '::error::Input `allowprerelease` must be type of boolean!'
@@ -118,7 +118,7 @@ Catch {
 	Write-Host -Object '::error::PowerShell module `PowerShellGet` does not exist!'
 	Exit 1
 }
-If (Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetModifier '^' -TargetNumber ([SemVer]::Parse('2.2.5'))) {
+If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetModifier '^' -TargetNumber ([SemVer]::Parse('2.2.5')))) {
 	Write-Host -Object '::error::PowerShell module `PowerShellGet` does not meet requirement!'
 	Exit 1
 }

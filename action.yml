@@ -10,22 +10,30 @@ inputs:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
     default: "False"
+  toolkit_version:
+    description: "{SemVer} Target version."
+    required: false
+    deprecationMessage: "Use input `version` instead!"
+  toolkit_allowprerelease:
+    description: "{Boolean} Whether to allow target pre release version."
+    required: false
+    deprecationMessage: "Use input `allowprerelease` instead!"
 runs:
   using: "composite"
   steps:
     - name: "Main (Non-Windows)"
       if: "${{runner.os != 'Windows'}}"
       env:
-        INPUT_VERSION: "${{inputs.version}}"
-        INPUT_ALLOWPRERELEASE: "${{inputs.allowprerelease}}"
+        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+        INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
       run: |
         sudo --non-interactive --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
       shell: "sh"
     - name: "Main (Windows)"
       if: "${{runner.os == 'Windows'}}"
       env:
-        INPUT_VERSION: "${{inputs.version}}"
-        INPUT_ALLOWPRERELEASE: "${{inputs.allowprerelease}}"
+        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+        INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
       run: |
         pwsh -NonInteractive (Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1')
       shell: "pwsh"
