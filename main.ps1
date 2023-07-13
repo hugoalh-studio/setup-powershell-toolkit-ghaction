@@ -21,6 +21,7 @@ Function Install-ModuleTargetVersion {
 	Try {
 		Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease |
 			Select-Object -ExpandProperty 'Version' |
+			ForEach-Object -Process { [SemVer]::Parse($_) } |
 			Where-Object -FilterScript { $_ -ine $VersionTarget } |
 			ForEach-Object -Process {
 				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
