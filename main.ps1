@@ -2,7 +2,7 @@
 $Script:ErrorActionPreference = 'Stop'
 Write-Host -Object 'Initialize.'
 [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -iin @('1', 'True')
-[RegEx]$SemVerModifierRegEx = '^(?:<|<=|=|>=|>|\^|~) *'
+[RegEx]$SemVerModifierRegEx = '^(?:[<>]=?|=|\^|~) *'
 Function Install-ModuleTargetVersion {
 	[CmdletBinding()]
 	[OutputType([Void])]
@@ -19,16 +19,14 @@ Function Install-ModuleTargetVersion {
 		Sort-Object |
 		Select-Object -Last 1
 	Try {
-		$ModuleMeta = Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease
-		$ModuleMeta |
+		Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease |
 			Select-Object -ExpandProperty 'Version' |
 			Where-Object -FilterScript { $_ -ine $VersionTarget } |
 			ForEach-Object -Process {
 				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
+			} -End {
+				Throw
 			}
-		If ($ModuleMeta.Version -inotcontains $VersionTarget) {
-			Throw
-		}
 	}
 	Catch {
 		Install-Module -Name $Name -RequiredVersion $VersionTarget -Scope 'AllUsers' -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
