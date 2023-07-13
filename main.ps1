@@ -127,12 +127,7 @@ If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetMo
 	Exit 1
 }
 Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
-If ($InputVersionLatest) {
-	Install-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'AllUsers' -AllowPrerelease:$InputAllowPreRelease -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
-}
-Else {
-	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier $InputVersionModifier -VersionNumber $InputVersionNumber -AllowPrerelease:$InputAllowPreRelease
-}
+Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease
 Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
 	Format-List -Property @('Version', 'PublishedDate', 'InstalledDate', 'UpdatedDate', 'Dependencies', 'RepositorySourceLocation', 'Repository', 'PackageManagementProvider', 'InstalledLocation') |
 	Out-String -Width 120 |

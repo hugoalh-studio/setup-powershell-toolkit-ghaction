@@ -13,11 +13,11 @@ inputs:
   toolkit_version:
     description: "{SemVer} Target version."
     required: false
-    deprecationMessage: "Use input `version` instead!"
+    deprecationMessage: "Replaced by input `version`!"
   toolkit_allowprerelease:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
-    deprecationMessage: "Use input `allowprerelease` instead!"
+    deprecationMessage: "Replaced by input `allowprerelease`!"
 runs:
   using: "composite"
   steps:
