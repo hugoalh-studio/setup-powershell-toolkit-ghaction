@@ -15,11 +15,11 @@
 
 ## 📝 Description
 
-A GitHub Action to setup PowerShell Gallery, PowerShellGet, and PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
+A GitHub Action to setup PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
 
 ## 📚 Documentation
 
-> **⚠ Important:** This documentation is v1.2.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
+> **⚠ Important:** This documentation is v1.4.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
 ### Getting Started
 
@@ -36,30 +36,24 @@ jobs:
 
 ### 📥 Input
 
-#### `toolkit_setup`
+#### `version`
 
-**\[Optional\]** `<Boolean = True>` Whether to setup PowerShell module `hugoalh.GitHubActionsToolkit`. When this input is `False`, will ignore inputs:
+**\[Optional\]** `<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
 
-- [`toolkit_version`](#toolkit_version)
-- [`toolkit_allowprerelease`](#toolkit_allowprerelease)
+> **ℹ️ Supported Modifier**
+>
+> - **`Latest`:** Latest version
+> - **`<`:** Less than this version
+> - **`<=`:** Less than or equal this version
+> - **(None) / `=`:** Equal this version
+> - **`>=`:** Greater than or equal this version
+> - **`>`:** Greater than this version
+> - **`^`:** Between this version and major equitant latest version
+> - **`~`:** Between this version and minor equitant latest version
 
-#### `toolkit_version`
+#### `allowprerelease`
 
-**\[Optional\]** `<SemVer = "1.6.0">` PowerShell module `hugoalh.GitHubActionsToolkit` target version; Default value will always change to the latest stable version.
-
-| **Versions** | **`toolkit_version` Default Value** |
-|:-:|:-:|
-| v1.3.1 | `"1.6.0"` |
-| v1.2.3 \~ v1.3.0 | `"1.5.0"` |
-| v1.2.1 \~ v1.2.2 | `"1.4.1"` |
-| v1.2.0 | `"1.4.0"` |
-| v1.1.0 | `"1.3.2"` |
-| v1.0.1 | `"1.2.3"` |
-| v1.0.0 | `"1.2.1"` |
-
-#### `toolkit_allowprerelease`
-
-**\[Optional\]** `<Boolean = False>` Whether to allow PowerShell module `hugoalh.GitHubActionsToolkit` target pre release version.
+**\[Optional\]** `<Boolean = False>` Whether to allow target pre release version.
 
 ### 📤 Output
 
@@ -74,7 +68,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Setup PowerShell Toolkit"
-        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.3.1"
+        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.4.0"
       - run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Write-GitHubActionsNotice -Message 'Hello, world!'
