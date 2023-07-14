@@ -12,25 +12,32 @@ Function Install-ModuleTargetVersion {
 		[Parameter(Mandatory = $True, Position = 2)][SemVer]$VersionNumber,
 		[Switch]$AllowPrerelease
 	)
-	[SemVer]$VersionTarget = Find-Module -Name $Name -AllVersions -AllowPrerelease:($AllowPrerelease.IsPresent) -Verbose:$IsDebugMode |
+	[SemVer]$VersionTarget = Find-Module -Name $Name -AllVersions -Repository 'PSGallery' -AllowPrerelease:($AllowPrerelease.IsPresent) -Verbose:$IsDebugMode |
 		Select-Object -ExpandProperty 'Version' |
 		ForEach-Object -Process { [SemVer]::Parse($_) } |
 		Where-Object -FilterScript { Test-SemVerModifier -Original $_ -TargetModifier $VersionModifier -TargetNumber $VersionNumber } |
 		Sort-Object |
 		Select-Object -Last 1
 	Try {
-		Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease |
+		[SemVer[]]$VersionInstalled = Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease |
 			Select-Object -ExpandProperty 'Version' |
-			ForEach-Object -Process { [SemVer]::Parse($_) } |
+			ForEach-Object -Process { [SemVer]::Parse($_) }
+		$VersionInstalled |
 			Where-Object -FilterScript { $_ -ine $VersionTarget } |
 			ForEach-Object -Process {
 				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
-			} -End {
-				Throw
 			}
+		If ((
+			$VersionInstalled |
+				Where-Object -FilterScript { $_ -ieq $VersionTarget } |
+				Measure-Object |
+				Select-Object -ExpandProperty 'Count'
+		) -eq 0) {
+			Throw
+		}
 	}
 	Catch {
-		Install-Module -Name $Name -RequiredVersion $VersionTarget -Scope 'AllUsers' -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
+		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope 'AllUsers' -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
 	}
 }
 Function Test-SemVerModifier {
@@ -130,7 +137,7 @@ If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetMo
 Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
 Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease
 Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
-	Format-List -Property @('Version', 'PublishedDate', 'InstalledDate', 'UpdatedDate', 'Dependencies', 'RepositorySourceLocation', 'Repository', 'PackageManagementProvider', 'InstalledLocation') |
+	Format-List |
 	Out-String -Width 120 |
 	Write-Host
 If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
