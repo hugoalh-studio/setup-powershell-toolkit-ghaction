@@ -40,16 +40,14 @@ jobs:
 
 **\[Optional\]** `<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
 
-> **ℹ️ Supported Modifier**
->
-> - **`Latest`:** Latest version
-> - **`<`:** Less than this version
-> - **`<=`:** Less than or equal this version
-> - **(None) / `=`:** Equal this version
-> - **`>=`:** Greater than or equal this version
-> - **`>`:** Greater than this version
-> - **`^`:** Between this version and major equitant latest version
-> - **`~`:** Between this version and minor equitant latest version
+- **`Latest`:** Latest version
+- **`<Ma.Mi.Pa-PR+Bu`:** Less than version `Ma.Mi.Pa-PR+Bu`
+- **`<=Ma.Mi.Pa-PR+Bu`:** Less than or equal version `Ma.Mi.Pa-PR+Bu`
+- **`Ma.Mi.Pa-PR+Bu` / `=Ma.Mi.Pa-PR+Bu`:** Equal version `Ma.Mi.Pa-PR+Bu`
+- **`>=Ma.Mi.Pa-PR+Bu`:** Greater than or equal version `Ma.Mi.Pa-PR+Bu`
+- **`>Ma.Mi.Pa-PR+Bu`:** Greater than version `Ma.Mi.Pa-PR+Bu`
+- **`^Ma.Mi.Pa-PR+Bu`:** Between version `Ma.Mi.Pa-PR+Bu` and major equitant latest version
+- **`~Ma.Mi.Pa-PR+Bu`:** Between version `Ma.Mi.Pa-PR+Bu` and minor equitant latest version
 
 #### `allowprerelease`
 
