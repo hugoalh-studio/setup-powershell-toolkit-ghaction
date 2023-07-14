@@ -53,6 +53,10 @@ jobs:
 
 **\[Optional\]** `<Boolean = False>` Whether to allow target pre release version.
 
+#### `keepsetting`
+
+**\[Optional\]** `<Boolean = True>` Whether to keep the setting that modified by this action.
+
 ### 📤 Output
 
 *N/A*
