@@ -10,6 +10,10 @@ inputs:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
     default: "False"
+  keepsetting:
+    description: "{Boolean} Whether to keep the setting that modified by this action."
+    required: false
+    default: "True"
   toolkit_version:
     description: "{SemVer} Target version."
     required: false
@@ -24,16 +28,18 @@ runs:
     - name: "Main (Non-Windows)"
       if: "${{runner.os != 'Windows'}}"
       env:
-        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+        INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
         sudo --non-interactive --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
       shell: "sh"
     - name: "Main (Windows)"
       if: "${{runner.os == 'Windows'}}"
       env:
-        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+        INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
         pwsh -NonInteractive (Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1')
       shell: "pwsh"

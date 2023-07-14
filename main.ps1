@@ -106,6 +106,13 @@ Catch {
 	Write-Host -Object '::error::Input `allowprerelease` must be type of boolean!'
 	Exit 1
 }
+Try {
+	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
+}
+Catch {
+	Write-Host -Object '::error::Input `keepsetting` must be type of boolean!'
+	Exit 1
+}
 Write-Host -Object 'Check PowerShell repository configuration.'
 Try {
 	$PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
@@ -140,7 +147,7 @@ Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrer
 	Format-List |
 	Out-String -Width 120 |
 	Write-Host
-If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
+If (!$InputKeepSetting -and $PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
 	Write-Host -Object 'Restore PowerShell repository previous configuration.'
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy $PSRepositoryPSGalleryMeta.InstallationPolicy -Verbose:$IsDebugMode
 }
