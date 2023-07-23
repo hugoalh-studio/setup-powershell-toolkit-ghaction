@@ -12,12 +12,21 @@ Function Install-ModuleTargetVersion {
 		[Parameter(Mandatory = $True, Position = 2)][SemVer]$VersionNumber,
 		[Switch]$AllowPrerelease
 	)
-	[SemVer]$VersionTarget = Find-Module -Name $Name -AllVersions -Repository 'PSGallery' -AllowPrerelease:($AllowPrerelease.IsPresent) -Verbose:$IsDebugMode |
+	[SemVer[]]$VersionsAvailable = Find-Module -Name $Name -AllVersions -Repository 'PSGallery' -AllowPrerelease:($AllowPrerelease.IsPresent) -Verbose:$IsDebugMode |
 		Select-Object -ExpandProperty 'Version' |
 		ForEach-Object -Process { [SemVer]::Parse($_) } |
+		Sort-Object
+	[SemVer]$VersionTarget = $VersionsAvailable |
 		Where-Object -FilterScript { Test-SemVerModifier -Original $_ -TargetModifier $VersionModifier -TargetNumber $VersionNumber } |
 		Sort-Object |
 		Select-Object -Last 1
+	If ($Null -ieq $VersionTarget) {
+		Throw "No available versions that meet requested version ``$($VersionModifier)$($VersionNumber.ToString())``! Only these versions are available: $(
+			$VersionsAvailable |
+				ForEach-Object -Process { $_.ToString() } |
+				Join-String -Separator ', '
+		)"
+	}
 	Try {
 		[SemVer[]]$VersionInstalled = Get-InstalledModule -Name $Name -AllVersions -AllowPrerelease |
 			Select-Object -ExpandProperty 'Version' |
@@ -142,7 +151,13 @@ If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetMo
 	Exit 1
 }
 Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
-Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease
+Try {
+	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease
+}
+Catch {
+	Write-Host -Object "::error::$($_ -ireplace '\r?\n', ' ')"
+	Exit 1
+}
 Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
 	Format-List |
 	Out-String -Width 120 |
