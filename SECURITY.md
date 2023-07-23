@@ -5,7 +5,7 @@
 > | **Legend** | **Description** |
 > |:-:|:--|
 > | L | **LTS:** Long term supported. |
-> | ✔ | **Active / Current:** Currently supported. |
+> | ✔️ | **Active / Current:** Currently supported. |
 > | 👎{🐛} | **Partially (Issue):** Partially supported due to confirmed contains bugs and/or issues. |
 > | 👎{🧓} | **Partially (Old):** Partially supported due to deprecated by newer versions. |
 > | ❌{🐛} | **No (Issue):** Not supported due to confirmed contains bugs and/or issues. |
@@ -14,7 +14,7 @@
 | **Versions** | **Status** | **Target - GitHub Actions Runner** | **Target - PowerShell** |
 |:-:|:-:|:-:|:-:|
 | v1.4.X | L | >= v2.303.0 | >= v7.2.0 |
-| v1.3.X | ✔ | >= v2.303.0 | >= v7.2.0 |
+| v1.3.X | 👎{🧓} | >= v2.303.0 | >= v7.2.0 |
 | v1.2.X | 👎{🧓} | >= v2.303.0 | >= v7.2.0 |
 | v1.1.X | 👎{🧓} | >= v2.297.0 | >= v7.2.0 |
 | v1.0.X | 👎{🧓} | >= v2.297.0 | >= v7.2.0 |
