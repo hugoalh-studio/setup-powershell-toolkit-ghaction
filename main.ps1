@@ -11,7 +11,8 @@ Function Install-ModuleTargetVersion {
 		[Parameter(Mandatory = $True, Position = 1)][AllowEmptyString()][String]$VersionModifier,
 		[Parameter(Mandatory = $True, Position = 2)][SemVer]$VersionNumber,
 		[Switch]$AllowPrerelease,
-		[String]$Scope
+		[String]$Scope,
+		[Switch]$Force
 	)
 	[SemVer[]]$VersionsAvailable = Find-Module -Name $Name -AllVersions -Repository 'PSGallery' -AllowPrerelease:($AllowPrerelease.IsPresent) -Verbose:$IsDebugMode |
 		Select-Object -ExpandProperty 'Version' |
@@ -47,7 +48,7 @@ Function Install-ModuleTargetVersion {
 		}
 	}
 	Catch {
-		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope $Scope -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
+		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope $Scope -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Force:($Force.IsPresent) -Confirm:$False -Verbose:$IsDebugMode
 	}
 }
 Function Test-SemVerModifier {
@@ -116,6 +117,13 @@ Catch {
 	Write-Host -Object '::error::Input `allowprerelease` must be type of boolean!'
 	Exit 1
 }
+Try {
+	[Boolean]$InputForce = [Boolean]::Parse($Env:INPUT_FORCE)
+}
+Catch {
+	Write-Host -Object '::error::Input `force` must be type of boolean!'
+	Exit 1
+}
 [String]$InputScope = $Env:INPUT_SCOPE
 Try {
 	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
@@ -148,7 +156,7 @@ If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetMo
 }
 Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
 Try {
-	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope
+	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope -Force:$InputForce
 }
 Catch {
 	Write-Host -Object "::error::$($_ -ireplace '\r?\n', ' ')"

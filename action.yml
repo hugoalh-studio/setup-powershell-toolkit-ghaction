@@ -15,6 +15,10 @@ inputs:
     description: "{String} Installation scope."
     required: false
     default: "AllUsers"
+  force:
+    description: "{Boolean} Whether to force install target (pre release) version."
+    required: false
+    default: "False"
   keepsetting:
     description: "{Boolean} Whether to keep the setting that modified by this action."
     required: false
@@ -34,6 +38,7 @@ runs:
       if: "${{runner.os != 'Windows'}}"
       env:
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+        INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
         INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
@@ -44,6 +49,7 @@ runs:
       if: "${{runner.os == 'Windows'}}"
       env:
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+        INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
         INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
