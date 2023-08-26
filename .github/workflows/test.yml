@@ -14,22 +14,27 @@ jobs:
           - "windows-latest"
       fail-fast: false
     steps:
-      - name: "Setup PowerShell Toolkit"
+      - name: "Setup CurrentUser"
         uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@main"
-      - name: "Test Toolkit"
+      - name: "Test CurrentUser"
         run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Test-GitHubActionsEnvironment
           Write-GitHubActionsNotice -Message 'Hello, world!'
         shell: "pwsh"
-      - name: "Setup PowerShell Toolkit"
+      - name: "Setup AllUsers"
         uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@main"
         with:
           sudo: "True"
           force: "True"
-      - name: "Test Toolkit"
+      - name: "Test AllUsers"
         run: |
           Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
           Test-GitHubActionsEnvironment
           Write-GitHubActionsNotice -Message 'Hello, world!'
         shell: "pwsh"
+      - name: "Setup Uninstall"
+        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@main"
+        with:
+          sudo: "True"
+          version: "False"

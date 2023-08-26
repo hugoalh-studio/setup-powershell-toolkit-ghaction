@@ -36,10 +36,7 @@ Function Install-ModuleTargetVersion {
 		$VersionInstalled |
 			Where-Object -FilterScript { $Force.IsPresent -or $_ -ine $VersionTarget } |
 			ForEach-Object -Process {
-				Try {
-					Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
-				}
-				Catch { }
+				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode -ErrorAction 'Continue'
 			}
 		If (
 			$Force.IsPresent -or
@@ -107,7 +104,8 @@ Write-Host -Object 'Import input.'
 Try {
 	[String]$InputVersionRaw = $Env:INPUT_VERSION
 	[Boolean]$InputVersionLatest = $InputVersionRaw -ieq 'Latest'
-	If (!$InputVersionLatest) {
+	[Boolean]$InputUninstall = $InputVersionRaw -iin @('False', 'None', 'Uninstall')
+	If (!$InputVersionLatest -and !$InputUninstall) {
 		[String]$InputVersionModifier = ($InputVersionRaw -imatch $SemVerModifierRegEx) ? $Matches[0].Trim() : ''
 		[SemVer]$InputVersionNumber = [SemVer]::Parse((($InputVersionRaw -imatch $SemVerModifierRegEx) ? $InputVersionRaw -ireplace "^$([RegEx]::Escape($Matches[0]))", '' : $InputVersionRaw))
 	}
@@ -130,7 +128,7 @@ Catch {
 	Write-Host -Object '::error::Input `force` must be type of boolean!'
 	Exit 1
 }
-[String]$InputScope = [Boolean]::Parse($Env:INPUT_SUDO) ? 'AllUsers' : 'CurrentUser'
+[String]$InputScope = $Env:INPUT_SCOPE
 Try {
 	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
 }
@@ -138,9 +136,9 @@ Catch {
 	Write-Host -Object '::error::Input `keepsetting` must be type of boolean!'
 	Exit 1
 }
-Write-Host -Object 'Check PowerShell repository configuration.'
 $PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
 If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
+	Write-Host -Object 'Tweak PowerShell repository configuration.'
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted' -Verbose:$IsDebugMode
 }
 Write-Host -Object 'Check PowerShellGet.'
@@ -162,7 +160,17 @@ If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetMo
 }
 Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
 Try {
-	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope -Force:$InputForce
+	If ($InputUninstall) {
+		Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
+			Select-Object -ExpandProperty 'Version' |
+			ForEach-Object -Process { [SemVer]::Parse($_) } |
+			ForEach-Object -Process {
+				Uninstall-Module -Name 'hugoalh.GitHubActionsToolkit' -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode -ErrorAction 'Continue'
+			}
+	}
+	Else {
+		Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier (($InputVersionLatest -or $InputUninstall) ? '>=' : $InputVersionModifier) -VersionNumber (($InputVersionLatest -or $InputUninstall) ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope -Force:$InputForce
+	}
 }
 Catch {
 	Write-Host -Object "::error::$($_ -ireplace '\r?\n', ' ')"
@@ -173,6 +181,6 @@ Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrer
 	Out-String -Width 120 |
 	Write-Host
 If (!$InputKeepSetting -and $PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
-	Write-Host -Object 'Restore PowerShell repository previous configuration.'
+	Write-Host -Object 'Restore PowerShell repository configuration.'
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy $PSRepositoryPSGalleryMeta.InstallationPolicy -Verbose:$IsDebugMode
 }

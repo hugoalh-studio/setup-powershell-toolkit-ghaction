@@ -4,7 +4,7 @@ author: "hugoalh Studio"
 description: "Setup PowerShell module `hugoalh.GitHubActionsToolkit`."
 inputs:
   sudo:
-    description: "{Boolean} Whether to execute in sudo mode (for non-Windows only)."
+    description: "{Boolean} Whether to execute this action in sudo mode (for non-Windows only)."
     required: false
     default: "False"
   version:
@@ -15,6 +15,10 @@ inputs:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
     default: "False"
+  scope:
+    description: "{String} Installation scope."
+    required: false
+    default: "CurrentUser"
   force:
     description: "{Boolean} Whether to force install or reinstall target (pre release) version."
     required: false
@@ -46,6 +50,7 @@ runs:
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
         INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+        INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_SUDO: "${{inputs.sudo}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
@@ -58,6 +63,7 @@ runs:
         INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
         INPUT_SUDO: "${{inputs.sudo}}"
+        INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
         sudo --non-interactive --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
@@ -69,6 +75,7 @@ runs:
         INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
         INPUT_SUDO: "${{inputs.sudo}}"
+        INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
         pwsh -NonInteractive (Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1')
