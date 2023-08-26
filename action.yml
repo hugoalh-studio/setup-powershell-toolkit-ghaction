@@ -4,7 +4,7 @@ author: "hugoalh Studio"
 description: "Setup PowerShell module `hugoalh.GitHubActionsToolkit`."
 inputs:
   sudo:
-    description: "{Boolean} Whether to execute this action in sudo mode (for non-Windows only)."
+    description: "{Boolean} Whether to execute this action in sudo mode on non-Windows environment."
     required: false
     default: "False"
   version:
