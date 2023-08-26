@@ -10,7 +10,8 @@ Function Install-ModuleTargetVersion {
 		[Parameter(Mandatory = $True, Position = 0)][String]$Name,
 		[Parameter(Mandatory = $True, Position = 1)][AllowEmptyString()][String]$VersionModifier,
 		[Parameter(Mandatory = $True, Position = 2)][SemVer]$VersionNumber,
-		[Switch]$AllowPrerelease
+		[Switch]$AllowPrerelease,
+		[String]$Scope
 	)
 	[SemVer[]]$VersionsAvailable = Find-Module -Name $Name -AllVersions -Repository 'PSGallery' -AllowPrerelease:($AllowPrerelease.IsPresent) -Verbose:$IsDebugMode |
 		Select-Object -ExpandProperty 'Version' |
@@ -46,7 +47,7 @@ Function Install-ModuleTargetVersion {
 		}
 	}
 	Catch {
-		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope 'AllUsers' -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
+		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope $Scope -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
 	}
 }
 Function Test-SemVerModifier {
@@ -115,6 +116,7 @@ Catch {
 	Write-Host -Object '::error::Input `allowprerelease` must be type of boolean!'
 	Exit 1
 }
+[String]$InputScope = $Env:INPUT_SCOPE
 Try {
 	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
 }
@@ -123,13 +125,7 @@ Catch {
 	Exit 1
 }
 Write-Host -Object 'Check PowerShell repository configuration.'
-Try {
-	$PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
-}
-Catch {
-	Write-Host -Object '::error::PowerShell repository `PSGallery` does not exist!'
-	Exit 1
-}
+$PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
 If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted' -Verbose:$IsDebugMode
 }
@@ -152,7 +148,7 @@ If (!(Test-SemVerModifier -Original $PSModulePowerShellGetMeta.Version -TargetMo
 }
 Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
 Try {
-	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease
+	Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope
 }
 Catch {
 	Write-Host -Object "::error::$($_ -ireplace '\r?\n', ' ')"
