@@ -11,12 +11,12 @@ inputs:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
     default: "False"
-  scope:
-    description: "{String} Installation scope."
+  sudo:
+    description: "{Boolean} Whether to execute in sudo mode."
     required: false
-    default: "AllUsers"
+    default: "False"
   force:
-    description: "{Boolean} Whether to force install target (pre release) version."
+    description: "{Boolean} Whether to force install or reinstall target (pre release) version."
     required: false
     default: "False"
   keepsetting:
@@ -34,13 +34,30 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: "Throw Error - Input `sudo`"
+      if: "${{inputs.sudo != 'False' && inputs.sudo != 'True'}}"
+      run: |
+        Write-Host -Object '::error::Input `sudo` must be type of boolean!'
+        Exit 1
+      shell: "pwsh"
     - name: "Main (Non-Windows)"
-      if: "${{runner.os != 'Windows'}}"
+      if: "${{runner.os != 'Windows' && inputs.sudo == 'False'}}"
       env:
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
         INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
-        INPUT_SCOPE: "${{inputs.scope}}"
+        INPUT_SUDO: "${{inputs.sudo}}"
+        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+      run: |
+        pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
+      shell: "sh"
+    - name: "Main (Non-Windows, Sudo)"
+      if: "${{runner.os != 'Windows' && inputs.sudo == 'True'}}"
+      env:
+        INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+        INPUT_FORCE: "${{inputs.force}}"
+        INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+        INPUT_SUDO: "${{inputs.sudo}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
         sudo --non-interactive --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
@@ -51,7 +68,7 @@ runs:
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
         INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
-        INPUT_SCOPE: "${{inputs.scope}}"
+        INPUT_SUDO: "${{inputs.sudo}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
       run: |
         pwsh -NonInteractive (Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1')

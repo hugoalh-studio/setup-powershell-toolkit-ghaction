@@ -34,9 +34,12 @@ Function Install-ModuleTargetVersion {
 			Select-Object -ExpandProperty 'Version' |
 			ForEach-Object -Process { [SemVer]::Parse($_) }
 		$VersionInstalled |
-			Where-Object -FilterScript { $_ -ine $VersionTarget } |
+			Where-Object -FilterScript { $Force.IsPresent -or $_ -ine $VersionTarget } |
 			ForEach-Object -Process {
-				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
+				Try {
+					Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
+				}
+				Catch { }
 			}
 		If (
 			$Force.IsPresent -or
@@ -127,7 +130,7 @@ Catch {
 	Write-Host -Object '::error::Input `force` must be type of boolean!'
 	Exit 1
 }
-[String]$InputScope = $Env:INPUT_SCOPE
+[String]$InputScope = [Boolean]::Parse($Env:INPUT_SUDO) ? 'AllUsers' : 'CurrentUser'
 Try {
 	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
 }
