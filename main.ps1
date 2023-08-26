@@ -54,7 +54,7 @@ Function Install-ModuleTargetVersion {
 		}
 	}
 	Catch {
-		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope $Scope -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Force:($Force.IsPresent) -Confirm:$False -Verbose:$IsDebugMode
+		Install-Module -Name $Name -RequiredVersion $VersionTarget -Repository 'PSGallery' -Scope $Scope -AllowPrerelease:($AllowPrerelease.IsPresent) -AcceptLicense -Confirm:$False -Verbose:$IsDebugMode
 	}
 }
 Function Test-SemVerModifier {

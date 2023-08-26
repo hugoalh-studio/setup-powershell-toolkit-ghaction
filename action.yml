@@ -12,7 +12,7 @@ inputs:
     required: false
     default: "False"
   sudo:
-    description: "{Boolean} Whether to execute in sudo mode."
+    description: "{Boolean} Whether to execute in sudo mode (for non-Windows only)."
     required: false
     default: "False"
   force:
