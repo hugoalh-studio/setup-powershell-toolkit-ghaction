@@ -38,12 +38,15 @@ Function Install-ModuleTargetVersion {
 			ForEach-Object -Process {
 				Uninstall-Module -Name $Name -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
 			}
-		If ((
-			$VersionInstalled |
-				Where-Object -FilterScript { $_ -ieq $VersionTarget } |
-				Measure-Object |
-				Select-Object -ExpandProperty 'Count'
-		) -eq 0) {
+		If (
+			$Force.IsPresent -or
+			(
+				$VersionInstalled |
+					Where-Object -FilterScript { $_ -ieq $VersionTarget } |
+					Measure-Object |
+					Select-Object -ExpandProperty 'Count'
+			) -eq 0
+		) {
 			Throw
 		}
 	}
