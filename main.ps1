@@ -169,14 +169,14 @@ Try {
 			}
 	}
 	Else {
-		Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier (($InputVersionLatest -or $InputUninstall) ? '>=' : $InputVersionModifier) -VersionNumber (($InputVersionLatest -or $InputUninstall) ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope -Force:$InputForce
+		Install-ModuleTargetVersion -Name 'hugoalh.GitHubActionsToolkit' -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease -Scope $InputScope -Force:$InputForce
 	}
 }
 Catch {
 	Write-Host -Object "::error::$($_ -ireplace '\r?\n', ' ')"
 	Exit 1
 }
-Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
+Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease -ErrorAction ($InputUninstall ? 'Continue' : 'Stop') |
 	Format-List |
 	Out-String -Width 120 |
 	Write-Host
