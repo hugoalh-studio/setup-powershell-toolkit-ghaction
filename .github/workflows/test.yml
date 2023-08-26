@@ -26,6 +26,7 @@ jobs:
         uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@main"
         with:
           sudo: "True"
+          scope: "AllUsers"
           force: "True"
       - name: "Test AllUsers"
         run: |
