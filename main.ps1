@@ -111,21 +111,21 @@ Try {
 	}
 }
 Catch {
-	Write-Host -Object '::error::Input `version` must be `"Latest"` or type of SemVer!'
+	Write-Host -Object '::error::Input `version` must be `"Latest"` or a SemVer!'
 	Exit 1
 }
 Try {
 	[Boolean]$InputAllowPreRelease = [Boolean]::Parse($Env:INPUT_ALLOWPRERELEASE)
 }
 Catch {
-	Write-Host -Object '::error::Input `allowprerelease` must be type of boolean!'
+	Write-Host -Object '::error::Input `allowprerelease` must be a boolean!'
 	Exit 1
 }
 Try {
 	[Boolean]$InputForce = [Boolean]::Parse($Env:INPUT_FORCE)
 }
 Catch {
-	Write-Host -Object '::error::Input `force` must be type of boolean!'
+	Write-Host -Object '::error::Input `force` must be a boolean!'
 	Exit 1
 }
 [String]$InputScope = $Env:INPUT_SCOPE
@@ -133,7 +133,7 @@ Try {
 	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
 }
 Catch {
-	Write-Host -Object '::error::Input `keepsetting` must be type of boolean!'
+	Write-Host -Object '::error::Input `keepsetting` must be a boolean!'
 	Exit 1
 }
 $PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
