@@ -41,7 +41,7 @@ runs:
     - name: "Throw Error - Input `sudo`"
       if: "${{inputs.sudo != 'False' && inputs.sudo != 'True'}}"
       run: |
-        Write-Host -Object '::error::Input `sudo` must be a boolean!'
+        Write-Host -Object '::error::Input `sudo` is not a boolean!'
         Exit 1
       shell: "pwsh"
     - name: "Main (Non-Windows)"
