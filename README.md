@@ -9,14 +9,15 @@
 
 A GitHub Action to setup PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
 
-## 📓 Documentation
-
 > **⚠️ Important:** This documentation is v1.4.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
-### Getting Started
+## 📥 Import
 
-- GitHub Actions Runner >= v2.303.0
+### GitHub Actions
+
+- **Target Version:** Runner >= v2.303.0, &:
   - PowerShell >= v7.2.0
+- **Require Permission:** *N/A*
 
 ```yml
 jobs:
@@ -26,13 +27,13 @@ jobs:
       - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@<Version>"
 ```
 
-### 📥 Input
+## 🧩 Input
 
-#### `sudo`
+### `sudo`
 
 **(>= v1.5.0) \[Optional\]** `<Boolean = False>` Whether to execute this action in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when input [`scope`](#scope) is `"AllUsers"`).
 
-#### `version`
+### `version`
 
 **\[Optional\]** `<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
 
@@ -45,47 +46,46 @@ jobs:
 - **`^Ma.Mi.Pa-PR+Bu`:** Between version `Ma.Mi.Pa-PR+Bu` and major equitant latest version
 - **`~Ma.Mi.Pa-PR+Bu`:** Between version `Ma.Mi.Pa-PR+Bu` and minor equitant latest version
 
-#### `allowprerelease`
+### `allowprerelease`
 
 **\[Optional\]** `<Boolean = False>` Whether to allow target pre release version.
 
-#### `scope`
+### `scope`
 
 **(>= v1.5.0) \[Optional\]** `<String = "CurrentUser">` Installation scope.
 
 - **`"AllUsers"`:** For all users. Also need to set input [`sudo`](#sudo) to `True`.
 - **`"CurrentUser"`:** For current user.
 
-#### `force`
+### `force`
 
 **(>= v1.5.0) \[Optional\]** `<Boolean = False>` Whether to force install or reinstall target (pre release) version.
 
-#### `keepsetting`
+### `keepsetting`
 
 **\[Optional\]** `<Boolean = True>` Whether to keep the setting that modified by this action.
 
-### 📤 Output
+## 🧩 Output
 
 *N/A*
 
-### Example
+## ✍️ Example
 
-```yml
-jobs:
-  job_id:
-    name: "Hello World"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Setup PowerShell Toolkit"
-        uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.5.0"
-      - run: |
-          Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
-          Write-GitHubActionsNotice -Message 'Hello, world!'
-        shell: "pwsh"
-```
+- ```yml
+  jobs:
+    job_id:
+      name: "Hello World"
+      runs-on: "ubuntu-latest"
+      steps:
+        - name: "Setup PowerShell Toolkit"
+          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.5.0"
+        - run: |
+            Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
+            Write-GitHubActionsNotice -Message 'Hello, world!'
+          shell: "pwsh"
+  ```
 
-### Guide
+## 📚 Guide
 
-#### GitHub Actions
-
-- [Enabling debug logging](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging)
+- GitHub Actions
+  - [Enabling debug logging](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging)
