@@ -38,14 +38,31 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Throw Error - Input `sudo`"
-      if: "${{inputs.sudo != 'False' && inputs.sudo != 'True'}}"
+    - name: "Main"
       run: |
-        Write-Host -Object '::error::Input `sudo` is not a boolean!'
-        Exit 1
+        #Requires -PSEdition Core -Version 7.2
+        Get-Alias -Scope 'Local' -ErrorAction 'SilentlyContinue' |
+          Remove-Alias -Scope 'Local' -Force -ErrorAction 'SilentlyContinue'
+        [Boolean]$OsIsLinux = $Env:RUNNER_OS -ieq 'Linux'
+        [Boolean]$OsIsMac = $Env:RUNNER_OS -ieq 'MacOS'
+        [Boolean]$OsIsWindows = $Env:RUNNER_OS -ieq 'Windows'
+        [String]$MainScriptPath = Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1'
+        If (!$OsIsLinux -and !$OsIsMac -and !$OsIsWindows) {
+          Write-Host -Object '::error::Unknown operate system!'
+          Exit 1
+        }
+        If (Test-Path -LiteralPath $MainScriptPath -PathType 'Leaf') {
+          Write-Host -Object '::error::Invalid script path!'
+          Exit 1
+        }
+        [Boolean]$InputSudo = [Boolean]::Parse($Env:INPUT_SUDO)
+        If ($InputSudo -and !$OsIsWindows) {
+          sudo --non-interactive --preserve-env pwsh -NonInteractive $MainScriptPath
+        }
+        Else {
+          pwsh -NonInteractive $MainScriptPath
+        }
       shell: "pwsh"
-    - name: "Main (Non-Windows)"
-      if: "${{runner.os != 'Windows' && inputs.sudo == 'False'}}"
       env:
         INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
         INPUT_FORCE: "${{inputs.force}}"
@@ -53,33 +70,48 @@ runs:
         INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_SUDO: "${{inputs.sudo}}"
         INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
-      run: |
-        pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
-      shell: "sh"
-    - name: "Main (Non-Windows, Sudo)"
-      if: "${{runner.os != 'Windows' && inputs.sudo == 'True'}}"
-      env:
-        INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
-        INPUT_FORCE: "${{inputs.force}}"
-        INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
-        INPUT_SUDO: "${{inputs.sudo}}"
-        INPUT_SCOPE: "${{inputs.scope}}"
-        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
-      run: |
-        sudo --non-interactive --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
-      shell: "sh"
-    - name: "Main (Windows)"
-      if: "${{runner.os == 'Windows'}}"
-      env:
-        INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
-        INPUT_FORCE: "${{inputs.force}}"
-        INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
-        INPUT_SUDO: "${{inputs.sudo}}"
-        INPUT_SCOPE: "${{inputs.scope}}"
-        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
-      run: |
-        pwsh -NonInteractive (Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1')
-      shell: "pwsh"
+    # - name: "Throw Error - Input `sudo`"
+    #   if: "${{inputs.sudo != 'False' && inputs.sudo != 'True'}}"
+    #   run: |
+    #     Write-Host -Object '::error::Input `sudo` is not a boolean!'
+    #     Exit 1
+    #   shell: "pwsh"
+    # - name: "Main (Non-Windows)"
+    #   if: "${{runner.os != 'Windows' && inputs.sudo == 'False'}}"
+    #   env:
+    #     INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+    #     INPUT_FORCE: "${{inputs.force}}"
+    #     INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+    #     INPUT_SCOPE: "${{inputs.scope}}"
+    #     INPUT_SUDO: "${{inputs.sudo}}"
+    #     INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+    #   run: |
+    #     pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
+    #   shell: "sh"
+    # - name: "Main (Non-Windows, Sudo)"
+    #   if: "${{runner.os != 'Windows' && inputs.sudo == 'True'}}"
+    #   env:
+    #     INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+    #     INPUT_FORCE: "${{inputs.force}}"
+    #     INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+    #     INPUT_SCOPE: "${{inputs.scope}}"
+    #     INPUT_SUDO: "${{inputs.sudo}}"
+    #     INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+    #   run: |
+    #     sudo --non-interactive --preserve-env pwsh -NonInteractive "$GITHUB_ACTION_PATH/main.ps1"
+    #   shell: "sh"
+    # - name: "Main (Windows)"
+    #   if: "${{runner.os == 'Windows'}}"
+    #   env:
+    #     INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+    #     INPUT_FORCE: "${{inputs.force}}"
+    #     INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
+    #     INPUT_SCOPE: "${{inputs.scope}}"
+    #     INPUT_SUDO: "${{inputs.sudo}}"
+    #     INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+    #   run: |
+    #     pwsh -NonInteractive (Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1')
+    #   shell: "pwsh"
 branding:
   icon: "package"
   color: "blue"
