@@ -1,6 +1,5 @@
 #Requires -PSEdition Core -Version 7.2
 $Script:ErrorActionPreference = 'Stop'
-Write-Host -Object 'Initialize.'
 [Boolean]$IsDebugMode = $Env:RUNNER_DEBUG -iin @('1', 'True')
 [RegEx]$SemVerModifierRegEx = '^(?:[<>]=?|=|\^|~) *'
 Function Install-ModuleTargetVersion {
@@ -100,7 +99,10 @@ Function Test-SemVerModifier {
 		}
 	}
 }
-Write-Host -Object 'Import input.'
+[Boolean]$InputAllowPreRelease = [Boolean]::Parse($Env:INPUT_ALLOWPRERELEASE)
+[Boolean]$InputForce = [Boolean]::Parse($Env:INPUT_FORCE)
+[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
+[String]$InputScope = $Env:INPUT_SCOPE
 Try {
 	[String]$InputVersionRaw = $Env:INPUT_VERSION
 	[Boolean]$InputVersionLatest = $InputVersionRaw -ieq 'Latest'
@@ -112,28 +114,6 @@ Try {
 }
 Catch {
 	Write-Host -Object '::error::Input `version` is not `"Latest"` or a SemVer!'
-	Exit 1
-}
-Try {
-	[Boolean]$InputAllowPreRelease = [Boolean]::Parse($Env:INPUT_ALLOWPRERELEASE)
-}
-Catch {
-	Write-Host -Object '::error::Input `allowprerelease` is not a boolean!'
-	Exit 1
-}
-Try {
-	[Boolean]$InputForce = [Boolean]::Parse($Env:INPUT_FORCE)
-}
-Catch {
-	Write-Host -Object '::error::Input `force` is not a boolean!'
-	Exit 1
-}
-[String]$InputScope = $Env:INPUT_SCOPE
-Try {
-	[Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
-}
-Catch {
-	Write-Host -Object '::error::Input `keepsetting` is not a boolean!'
 	Exit 1
 }
 $PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'

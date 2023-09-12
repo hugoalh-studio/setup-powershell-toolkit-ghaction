@@ -41,17 +41,18 @@ runs:
     - name: "Main"
       run: |
         #Requires -PSEdition Core -Version 7.2
+        $Script:ErrorActionPreference = 'Stop'
         Get-Alias -Scope 'Local' -ErrorAction 'SilentlyContinue' |
           Remove-Alias -Scope 'Local' -Force -ErrorAction 'SilentlyContinue'
-        [Boolean]$OsIsLinux = $Env:RUNNER_OS -ieq 'Linux'
-        [Boolean]$OsIsMac = $Env:RUNNER_OS -ieq 'MacOS'
-        [Boolean]$OsIsWindows = $Env:RUNNER_OS -ieq 'Windows'
-        [String]$MainScriptPath = Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1'
+        [Boolean]$OsIsLinux = $Env:RUNNER_OS -ieq 'Linux' -or $IsLinux
+        [Boolean]$OsIsMac = $Env:RUNNER_OS -ieq 'MacOS' -or $IsMacOS
+        [Boolean]$OsIsWindows = $Env:RUNNER_OS -ieq 'Windows' -or $IsWindows
         If (!$OsIsLinux -and !$OsIsMac -and !$OsIsWindows) {
           Write-Host -Object '::error::Unknown operate system!'
           Exit 1
         }
-        If (Test-Path -LiteralPath $MainScriptPath -PathType 'Leaf') {
+        [String]$MainScriptPath = Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1'
+        If (!(Test-Path -LiteralPath $MainScriptPath -PathType 'Leaf')) {
           Write-Host -Object '::error::Invalid script path!'
           Exit 1
         }
