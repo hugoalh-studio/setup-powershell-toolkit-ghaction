@@ -29,13 +29,15 @@ jobs:
 
 ## 🧩 Input
 
+> **ℹ️ Notice:** All of the inputs are optional; Use this action without any input will default to install latest version for current user, and keep the setting that modified.
+
 ### `sudo`
 
-**(>= v1.5.0) \[Optional\]** `<Boolean = False>` Whether to execute this action in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when input [`scope`](#scope) is `"AllUsers"`).
+**(>= v1.5.0)** `<Boolean = False>` Whether to execute this action in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when [input `scope`](#scope) is `"AllUsers"`).
 
 ### `version`
 
-**\[Optional\]** `<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
+`<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
 
 - **`Latest`:** Latest version
 - **`<Ma.Mi.Pa-PR+Bu`:** Less than version `Ma.Mi.Pa-PR+Bu`
@@ -48,22 +50,22 @@ jobs:
 
 ### `allowprerelease`
 
-**\[Optional\]** `<Boolean = False>` Whether to allow target pre release version.
+`<Boolean = False>` Whether to allow target pre release version.
 
 ### `scope`
 
-**(>= v1.5.0) \[Optional\]** `<String = "CurrentUser">` Installation scope.
+**(>= v1.5.0)** `<String = "CurrentUser">` Installation scope.
 
-- **`"AllUsers"`:** For all users. Also need to set input [`sudo`](#sudo) to `True`.
+- **`"AllUsers"`:** For all users. Also need to set [input `sudo`](#sudo) to `True`.
 - **`"CurrentUser"`:** For current user.
 
 ### `force`
 
-**(>= v1.5.0) \[Optional\]** `<Boolean = False>` Whether to force install or reinstall target (pre release) version.
+**(>= v1.5.0)** `<Boolean = False>` Whether to force install or reinstall target (pre release) version.
 
 ### `keepsetting`
 
-**\[Optional\]** `<Boolean = True>` Whether to keep the setting that modified by this action.
+`<Boolean = True>` Whether to keep the setting that modified by this action.
 
 ## 🧩 Output
 
