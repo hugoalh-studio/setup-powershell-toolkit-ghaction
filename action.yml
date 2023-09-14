@@ -44,10 +44,6 @@ runs:
         $Script:ErrorActionPreference = 'Stop'
         Get-Alias -Scope 'Local' -ErrorAction 'SilentlyContinue' |
           Remove-Alias -Scope 'Local' -Force -ErrorAction 'SilentlyContinue'
-        If ($Env:RUNNER_OS -inotin @('Linux', 'MacOS', 'Windows')) {
-          Write-Host -Object '::error::Unknown operate system!'
-          Exit 1
-        }
         [String]$MainScriptPath = Join-Path -Path $Env:GITHUB_ACTION_PATH -ChildPath 'main.ps1'
         If (!(Test-Path -LiteralPath $MainScriptPath -PathType 'Leaf')) {
           Write-Host -Object '::error::Invalid script path!'
