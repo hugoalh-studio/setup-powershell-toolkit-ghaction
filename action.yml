@@ -44,10 +44,7 @@ runs:
         $Script:ErrorActionPreference = 'Stop'
         Get-Alias -Scope 'Local' -ErrorAction 'SilentlyContinue' |
           Remove-Alias -Scope 'Local' -Force -ErrorAction 'SilentlyContinue'
-        [Boolean]$OsIsLinux = $Env:RUNNER_OS -ieq 'Linux' -or $IsLinux
-        [Boolean]$OsIsMac = $Env:RUNNER_OS -ieq 'MacOS' -or $IsMacOS
-        [Boolean]$OsIsWindows = $Env:RUNNER_OS -ieq 'Windows' -or $IsWindows
-        If (!$OsIsLinux -and !$OsIsMac -and !$OsIsWindows) {
+        If ($Env:RUNNER_OS -inotin @('Linux', 'MacOS', 'Windows')) {
           Write-Host -Object '::error::Unknown operate system!'
           Exit 1
         }
@@ -57,7 +54,7 @@ runs:
           Exit 1
         }
         [Boolean]$InputSudo = [Boolean]::Parse($Env:INPUT_SUDO)
-        If ($InputSudo -and !$OsIsWindows) {
+        If ($InputSudo -and $Env:RUNNER_OS -iin @('Linux', 'MacOS')) {
           sudo --non-interactive --preserve-env pwsh -NonInteractive $MainScriptPath
         }
         Else {
