@@ -80,7 +80,7 @@ jobs:
       runs-on: "ubuntu-latest"
       steps:
         - name: "Setup PowerShell Toolkit"
-          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.5.0"
+          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.5.2"
         - run: |
             Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
             Write-GitHubActionsNotice -Message 'Hello, world!'
