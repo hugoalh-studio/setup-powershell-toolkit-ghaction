@@ -37,7 +37,7 @@ jobs:
 
 ### `version`
 
-`<String = "^1.0.0">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
+`<String = "^1.0.0">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to latest major version `1`.
 
 - **`"Latest"`:** Latest version
 - **`"<1.2.3"`:** Less than this version
