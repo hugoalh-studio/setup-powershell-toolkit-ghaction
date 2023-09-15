@@ -39,14 +39,14 @@ jobs:
 
 `<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
 
-- **`Latest`:** Latest version
-- **`<Ma.Mi.Pa-PR+Bu`:** Less than version `Ma.Mi.Pa-PR+Bu`
-- **`<=Ma.Mi.Pa-PR+Bu`:** Less than or equal version `Ma.Mi.Pa-PR+Bu`
-- **`Ma.Mi.Pa-PR+Bu` / `=Ma.Mi.Pa-PR+Bu`:** Equal version `Ma.Mi.Pa-PR+Bu`
-- **`>=Ma.Mi.Pa-PR+Bu`:** Greater than or equal version `Ma.Mi.Pa-PR+Bu`
-- **`>Ma.Mi.Pa-PR+Bu`:** Greater than version `Ma.Mi.Pa-PR+Bu`
-- **`^Ma.Mi.Pa-PR+Bu`:** Between version `Ma.Mi.Pa-PR+Bu` and major equitant latest version
-- **`~Ma.Mi.Pa-PR+Bu`:** Between version `Ma.Mi.Pa-PR+Bu` and minor equitant latest version
+- **`"Latest"`:** Latest version
+- **`"<Version"`:** Less than this version
+- **`"<=Version"`:** Less than or equal to this version
+- **`"Version"` / `"=Version"`:** Equal to this version
+- **`">=Version"`:** Greater than or equal to this version
+- **`">Version"`:** Greater than this version
+- **`"^Version"`:** Between this version and major equitant latest version
+- **`"~Version"`:** Between this version and minor equitant latest version
 
 ### `allowprerelease`
 
