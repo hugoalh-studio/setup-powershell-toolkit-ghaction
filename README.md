@@ -9,7 +9,7 @@
 
 A GitHub Action to setup PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
 
-> **⚠️ Important:** This documentation is v1.4.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
+> **⚠️ Important:** This documentation is v1.6.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
 ## 🔰 Begin
 
@@ -29,24 +29,24 @@ jobs:
 
 ## 🧩 Input
 
-> **ℹ️ Notice:** All of the inputs are optional; Use this action without any input will default to install latest version for current user, and keep the setting that modified.
+> **ℹ️ Notice:** All of the inputs are optional; Use this action without any input will default to install latest major version `1` for current user, and keep the setting that modified.
 
 ### `sudo`
 
-**(>= v1.5.0)** `<Boolean = False>` Whether to execute this action in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when [input `scope`](#scope) is `"AllUsers"`).
+`<Boolean = False>` Whether to execute this action in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when [input `scope`](#scope) is `"AllUsers"`).
 
 ### `version`
 
-`<String = "Latest">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
+`<String = "^1.0.0">` Target version, by Semantic Versioning (SemVer) 2.0.0 with optional modifier; Default to the latest version.
 
 - **`"Latest"`:** Latest version
-- **`"<Version"`:** Less than this version
-- **`"<=Version"`:** Less than or equal to this version
-- **`"Version"` / `"=Version"`:** Equal to this version
-- **`">=Version"`:** Greater than or equal to this version
-- **`">Version"`:** Greater than this version
-- **`"^Version"`:** Between this version and major equitant latest version
-- **`"~Version"`:** Between this version and minor equitant latest version
+- **`"<1.2.3"`:** Less than this version
+- **`"<=1.2.3"`:** Less than or equal to this version
+- **`"1.2.3"` / `"=1.2.3"`:** Equal to this version
+- **`">=1.2.3"`:** Greater than or equal to this version
+- **`">1.2.3"`:** Greater than this version
+- **`"^1.2.3"`:** Between this version and major equitant latest version
+- **`"~1.2.3"`:** Between this version and minor equitant latest version
 
 ### `allowprerelease`
 
@@ -54,14 +54,14 @@ jobs:
 
 ### `scope`
 
-**(>= v1.5.0)** `<String = "CurrentUser">` Installation scope.
+`<String = "CurrentUser">` Installation scope.
 
 - **`"AllUsers"`:** For all users. Also need to set [input `sudo`](#sudo) to `True`.
 - **`"CurrentUser"`:** For current user.
 
 ### `force`
 
-**(>= v1.5.0)** `<Boolean = False>` Whether to force install or reinstall target (pre release) version.
+`<Boolean = False>` Whether to force install or reinstall target (pre release) version.
 
 ### `keepsetting`
 
@@ -80,7 +80,7 @@ jobs:
       runs-on: "ubuntu-latest"
       steps:
         - name: "Setup PowerShell Toolkit"
-          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.5.2"
+          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.6.0"
         - run: |
             Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
             Write-GitHubActionsNotice -Message 'Hello, world!'

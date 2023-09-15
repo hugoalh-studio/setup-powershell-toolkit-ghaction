@@ -10,7 +10,7 @@ inputs:
   version:
     description: "{String} Target version."
     required: false
-    default: "Latest"
+    default: "^1.0.0"
   allowprerelease:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
