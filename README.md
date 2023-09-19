@@ -24,7 +24,7 @@ jobs:
   job_id:
     runs-on: "________" # Any
     steps:
-      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@<Version>"
+      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@<Tag>"
 ```
 
 ## 🧩 Input
