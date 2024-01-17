@@ -26,7 +26,7 @@ inputs:
   keepsetting:
     description: "{Boolean} Whether to keep the setting that modified."
     required: false
-    default: "True"
+    default: "False"
 outputs:
   path:
     description: "{String | Null} Path of the installation."

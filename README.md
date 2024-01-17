@@ -35,7 +35,7 @@ jobs:
 
 ### `sudo`
 
-`<Boolean = False>` Whether to execute this action in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when [input `scope`](#scope) is `"AllUsers"`).
+`<Boolean = False>` Whether to execute in sudo mode on non-Windows environment. This must set to `True` in order to able install for all users on non-Windows environment (i.e.: when [input `scope`](#scope) is `"AllUsers"`).
 
 ### `version`
 
@@ -67,7 +67,7 @@ jobs:
 
 ### `keepsetting`
 
-`<Boolean = True>` Whether to keep the setting that modified by this action.
+`<Boolean = False>` Whether to keep the setting that modified.
 
 ## 🧩 Output
 
