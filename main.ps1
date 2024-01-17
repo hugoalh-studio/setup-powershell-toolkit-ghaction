@@ -103,7 +103,7 @@ If (
 		$PSPackageProviderPowerShellGetMeta |
 			Measure-Object
 	).Count -ne 1 -or
-	!([SemVer]::Parse($PSPackageProviderPowerShellGetMeta.Version) -ge [SemVer]::Parse('2.2.5') -and [SemVer]::Parse($PSPackageProviderPowerShellGetMeta.Version) -lt [SemVer]::Parse('3.0.0'))
+	!($PSPackageProviderPowerShellGetMeta.Version -ge [SemVer]::Parse('2.2.5') -and $PSPackageProviderPowerShellGetMeta.Version -lt [SemVer]::Parse('3.0.0'))
 ) {
 	Write-Host -Object '::error::PowerShell package provider does not meet the requirement!'
 	Exit 1

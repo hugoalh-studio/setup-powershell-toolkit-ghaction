@@ -12,7 +12,7 @@ jobs:
           - "macos-latest"
           - "ubuntu-latest"
           - "windows-latest"
-      fail-fast: true
+      fail-fast: false
     steps:
       - name: "Setup CurrentUser"
         uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@main"
