@@ -10,7 +10,7 @@ inputs:
   version:
     description: "{String} Target version."
     required: false
-    default: "^1.0.0"
+    default: "^2.1.0"
   allowprerelease:
     description: "{Boolean} Whether to allow target pre release version."
     required: false
@@ -27,18 +27,11 @@ inputs:
     description: "{Boolean} Whether to keep the setting that modified by this action."
     required: false
     default: "True"
-  toolkit_version:
-    description: "{SemVer} Target version."
-    required: false
-    deprecationMessage: "Replaced by input `version`!"
-  toolkit_allowprerelease:
-    description: "{Boolean} Whether to allow target pre release version."
-    required: false
-    deprecationMessage: "Replaced by input `allowprerelease`!"
 runs:
   using: "composite"
   steps:
     - name: "Main"
+      id: "main"
       run: |
         #Requires -PSEdition Core -Version 7.2
         $Script:ErrorActionPreference = 'Stop'
@@ -58,12 +51,12 @@ runs:
         }
       shell: "pwsh"
       env:
-        INPUT_ALLOWPRERELEASE: "${{inputs.toolkit_allowprerelease || inputs.allowprerelease}}"
+        INPUT_ALLOWPRERELEASE: "${{inputs.allowprerelease}}"
         INPUT_FORCE: "${{inputs.force}}"
         INPUT_KEEPSETTING: "${{inputs.keepsetting}}"
         INPUT_SCOPE: "${{inputs.scope}}"
         INPUT_SUDO: "${{inputs.sudo}}"
-        INPUT_VERSION: "${{inputs.toolkit_version || inputs.version}}"
+        INPUT_VERSION: "${{inputs.version}}"
 branding:
   icon: "package"
   color: "blue"

@@ -9,13 +9,14 @@
 
 A GitHub Action to setup PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
 
-> **⚠️ Important:** This documentation is v1.6.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
+> [!IMPORTANT]
+> This documentation is v2.0.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
 ## 🔰 Begin
 
 ### GitHub Actions
 
-- **Target Version:** Runner >= v2.303.0, &:
+- **Target Version:** Runner >= v2.311.0, &:
   - PowerShell >= v7.2.0
 - **Require Permission:** *N/A*
 
@@ -29,7 +30,8 @@ jobs:
 
 ## 🧩 Input
 
-> **ℹ️ Notice:** All of the inputs are optional; Use this action without any input will default to install latest major version `1` for current user, and keep the setting that modified.
+> [!NOTE]
+> All of the inputs are optional; Use this action without any input will default to install major equitant latest version of `2.1.0` for current user, and keep the setting that modified.
 
 ### `sudo`
 
@@ -37,7 +39,7 @@ jobs:
 
 ### `version`
 
-`<String = "^1.0.0">` Target version, by [Semantic Versioning (SemVer) 2.0.0](https://semver.org/spec/v2.0.0.html) with optional modifier; Default to latest major version `1`.
+`<String = "^2.1.0">` Target version, by [Semantic Versioning (SemVer) 2.0.0](https://semver.org/spec/v2.0.0.html) with optional modifier; Default to major equitant latest version of `2.1.0`.
 
 - **`"Latest"`:** Latest version
 - **`"<1.2.3"`:** Less than this version
@@ -56,7 +58,7 @@ jobs:
 
 `<String = "CurrentUser">` Installation scope.
 
-- **`"AllUsers"`:** For all users. Also need to set [input `sudo`](#sudo) to `True`.
+- **`"AllUsers"`:** For all users. Also need to set [input `sudo`](#sudo) to `True` on non-Windows environment.
 - **`"CurrentUser"`:** For current user.
 
 ### `force`
@@ -80,7 +82,7 @@ jobs:
       runs-on: "ubuntu-latest"
       steps:
         - name: "Setup PowerShell Toolkit"
-          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v1.6.0"
+          uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@v2.0.0"
         - run: |
             Import-Module -Name 'hugoalh.GitHubActionsToolkit' -Scope 'Local'
             Write-GitHubActionsNotice -Message 'Hello, world!'
