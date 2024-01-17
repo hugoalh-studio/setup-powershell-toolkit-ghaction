@@ -19,39 +19,40 @@ Function Resolve-TargetVersion {
 	Write-Host -Object "::debug::Versions Available [$($VersionsAvailable.Count)]: $VersionsAvailableStringify"
 	$VersionResolve = $VersionsAvailable |
 		Where-Object -FilterScript {
+			[SemVer]$VersionAvailable = $_ # This reassign is necessary, as $_ in Switch is value of the switch!
 			Switch ($VersionModifier) {
 				'<' {
-					$_ -ilt $VersionNumber |
+					$VersionAvailable -ilt $VersionNumber |
 						Write-Output
 					Break
 				}
 				'<=' {
-					$_ -ile $VersionNumber |
+					$VersionAvailable -ile $VersionNumber |
 						Write-Output
 					Break
 				}
 				'>=' {
-					$_ -ige $VersionNumber |
+					$VersionAvailable -ige $VersionNumber |
 						Write-Output
 					Break
 				}
 				'>' {
-					$_ -igt $VersionNumber |
+					$VersionAvailable -igt $VersionNumber |
 						Write-Output
 					Break
 				}
 				'^' {
-					$_ -ige $VersionNumber -and $_ -ilt [SemVer]::Parse("$($VersionNumber.Major + 1).0.0") |
+					$VersionAvailable -ige $VersionNumber -and $VersionAvailable -ilt [SemVer]::Parse("$($VersionNumber.Major + 1).0.0") |
 						Write-Output
 					Break
 				}
 				'~' {
-					$_ -ige $VersionNumber -and $_ -ilt [SemVer]::Parse("$($VersionNumber.Major).$($VersionNumber.Minor + 1).0") |
+					$VersionAvailable -ige $VersionNumber -and $VersionAvailable -ilt [SemVer]::Parse("$($VersionNumber.Major).$($VersionNumber.Minor + 1).0") |
 						Write-Output
 					Break
 				}
 				Default {
-					$_ -ieq $VersionNumber |
+					$VersionAvailable -ieq $VersionNumber |
 						Write-Output
 					Break
 				}
@@ -60,12 +61,10 @@ Function Resolve-TargetVersion {
 		Sort-Object -Descending |
 		Select-Object -First 1
 	If ($Null -ieq $VersionResolve) {
-		Write-Host -Object "::error::No available versions that fulfill the target version ``$($VersionModifier)$($VersionNumber.ToString())``! Only these versions are available: $VersionsAvailableStringify"
-		Exit 1
+		throw "No available versions that fulfill the target version ``$($VersionModifier)$($VersionNumber.ToString())``! Only these versions are available: $VersionsAvailableStringify"
 	}
 	Write-Output -InputObject $VersionResolve
 }
-Write-Host -Object 'Initialize.'
 [Boolean]$InputAllowPreRelease = [Boolean]::Parse($Env:INPUT_ALLOWPRERELEASE)
 [Boolean]$InputForce = [Boolean]::Parse($Env:INPUT_FORCE)
 [Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
@@ -83,53 +82,40 @@ If (!$InputVersionLatest -and !$InputUninstall) {
 		Exit 1
 	}
 }
-Write-Host -Object 'Check PowerShell repository.'
 $PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
-If ((
-	$PSRepositoryPSGalleryMeta |
-		Measure-Object
-).Count -ne 1) {
-	Write-Host -Object '::error::PowerShell repository does not meet the requirement!'
+If ($Null -eq $PSRepositoryPSGalleryMeta) {
+	Write-Host -Object '::error::PowerShell repository `PSGallery` is missing!'
 	Exit 1
 }
 If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
 	Write-Host -Object 'Tweak PowerShell repository configuration.'
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted' -Verbose:$IsDebugMode
 }
-Write-Host -Object 'Check PowerShell package provider.'
 $PSPackageProviderPowerShellGetMeta = Get-PackageProvider -Name 'PowerShellGet'
-If (
-	(
-		$PSPackageProviderPowerShellGetMeta |
-			Measure-Object
-	).Count -ne 1 -or
-	!($PSPackageProviderPowerShellGetMeta.Version -ge [Microsoft.PackageManagement.Internal.Utility.Versions.FourPartVersion]::Parse('2.2.5') -and $PSPackageProviderPowerShellGetMeta.Version -lt [Microsoft.PackageManagement.Internal.Utility.Versions.FourPartVersion]::Parse('3.0.0'))
-) {
-	Write-Host -Object '::error::PowerShell package provider does not meet the requirement!'
+If (!($PSPackageProviderPowerShellGetMeta.Version -ge [Microsoft.PackageManagement.Internal.Utility.Versions.FourPartVersion]::Parse('2.2.5') -and $PSPackageProviderPowerShellGetMeta.Version -lt [Microsoft.PackageManagement.Internal.Utility.Versions.FourPartVersion]::Parse('3.0.0'))) {
+	Write-Host -Object "::error::PowerShell package provider ``PowerShellGet`` is not compatible! Expect ``^2.2.5.0``; Current ``$($PSPackageProviderPowerShellGetMeta.Version.ToString())``."
 	Exit 1
 }
-Write-Host -Object 'Setup PowerShell module `hugoalh.GitHubActionsToolkit`.'
 Try {
+	$ToolkitInstalledPrevious = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease -ErrorAction 'SilentlyContinue'
 	If ($InputUninstall) {
-		Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
+		$ToolkitInstalledPrevious |
 			ForEach-Object -Process {
 				Uninstall-Module -Name 'hugoalh.GitHubActionsToolkit' -RequiredVersion $_.Version -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
 			}
 	}
 	Else {
 		[SemVer]$VersionResolve = Resolve-TargetVersion -VersionModifier ($InputVersionLatest ? '>=' : $InputVersionModifier) -VersionNumber ($InputVersionLatest ? [SemVer]::Parse('2.1.0') : $InputVersionNumber) -AllowPrerelease:$InputAllowPreRelease
-		[SemVer[]]$VersionsInstalled = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease |
-			ForEach-Object -Process { [SemVer]::Parse($_.Version) }
-		$VersionsInstalled |
-			Where-Object -FilterScript { $InputForce -or $_ -ine $VersionResolve } |
+		$ToolkitInstalledPrevious |
+			Where-Object -FilterScript { $InputForce -or [SemVer]::Parse($_.Version) -ine $VersionResolve } |
 			ForEach-Object -Process {
-				Uninstall-Module -Name 'hugoalh.GitHubActionsToolkit' -RequiredVersion $_ -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
+				Uninstall-Module -Name 'hugoalh.GitHubActionsToolkit' -RequiredVersion $_.Version -AllowPrerelease -Confirm:$False -Verbose:$IsDebugMode
 			}
 		If (
 			$InputForce -or
 			(
-				$VersionsInstalled |
-					Where-Object -FilterScript { $_ -ieq $VersionResolve } |
+				$ToolkitInstalledPrevious |
+					Where-Object -FilterScript { [SemVer]::Parse($_.Version) -ieq $VersionResolve } |
 					Measure-Object
 			).Count -eq 0
 		) {
@@ -141,9 +127,16 @@ Catch {
 	Write-Host -Object "::error::$($_ -ireplace '\r?\n', ' ')"
 	Exit 1
 }
-Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease -ErrorAction ($InputUninstall ? 'Continue' : 'Stop') |
+$ToolkitInstalledCurrent = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease -ErrorAction ($InputUninstall ? 'Continue' : 'Stop')
+$ToolkitInstalledCurrent |
 	Format-List -Property @('Version', 'PublishedDate', 'InstalledDate', 'UpdatedDate', 'Dependencies', 'RepositorySourceLocation', 'Repository', 'PackageManagementProvider', 'InstalledLocation') |
 	Write-Host
+If ($Null -ne $ToolkitInstalledCurrent) {
+	Add-Content -LiteralPath $Env:GITHUB_OUTPUT -Value @(
+		"path=$($ToolkitInstalledCurrent.InstalledLocation)",
+		"version=$($ToolkitInstalledCurrent.Version.ToString())"
+	) -Confirm:$False -Encoding 'UTF8NoBOM'
+}
 If (!$InputKeepSetting) {
 	If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
 		Write-Host -Object 'Restore PowerShell repository configuration.'
