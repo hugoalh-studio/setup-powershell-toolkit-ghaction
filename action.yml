@@ -29,10 +29,10 @@ inputs:
     default: "True"
 outputs:
   path:
-    description: "{String | Null} Installed path."
+    description: "{String | Null} Path of the installation."
     value: "${{steps.main.outputs.path}}"
   version:
-    description: "{SemVer | Null} Installed version."
+    description: "{SemVer | Null} Version of the installation."
     value: "${{steps.main.outputs.version}}"
 runs:
   using: "composite"

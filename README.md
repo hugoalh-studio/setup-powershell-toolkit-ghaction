@@ -71,7 +71,13 @@ jobs:
 
 ## 🧩 Output
 
-*N/A*
+### `path`
+
+`<String>` Path of the installation.
+
+### `version`
+
+`<SemVer>` Version of the installation.
 
 ## ✍️ Example
 

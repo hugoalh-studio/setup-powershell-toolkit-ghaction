@@ -65,6 +65,7 @@ Function Resolve-TargetVersion {
 	}
 	Write-Output -InputObject $VersionResolve
 }
+Write-Host -Object 'Initialize.'
 [Boolean]$InputAllowPreRelease = [Boolean]::Parse($Env:INPUT_ALLOWPRERELEASE)
 [Boolean]$InputForce = [Boolean]::Parse($Env:INPUT_FORCE)
 [Boolean]$InputKeepSetting = [Boolean]::Parse($Env:INPUT_KEEPSETTING)
@@ -82,20 +83,27 @@ If (!$InputVersionLatest -and !$InputUninstall) {
 		Exit 1
 	}
 }
+Write-Host -Object 'Check PowerShell package provider.'
 $PSPackageProviderPowerShellGetMeta = Get-PackageProvider -Name 'PowerShellGet'
 If (!($PSPackageProviderPowerShellGetMeta.Version -ge [Microsoft.PackageManagement.Internal.Utility.Versions.FourPartVersion]::Parse('2.2.5') -and $PSPackageProviderPowerShellGetMeta.Version -lt [Microsoft.PackageManagement.Internal.Utility.Versions.FourPartVersion]::Parse('3.0.0'))) {
 	Write-Host -Object "::error::PowerShell package provider ``PowerShellGet`` is not compatible! Expect ``^2.2.5.0``; Current ``$($PSPackageProviderPowerShellGetMeta.Version.ToString())``."
 	Exit 1
 }
+Write-Host -Object 'Check PowerShell repository.'
 $PSRepositoryPSGalleryMeta = Get-PSRepository -Name 'PSGallery'
 If ($Null -eq $PSRepositoryPSGalleryMeta) {
 	Write-Host -Object '::error::PowerShell repository `PSGallery` is missing!'
+	Exit 1
+}
+If ($PSRepositoryPSGalleryMeta.SourceLocation -ine 'https://www.powershellgallery.com/api/v2') {
+	Write-Host -Object '::error::PowerShell repository `PSGallery` was modified!'
 	Exit 1
 }
 If ($PSRepositoryPSGalleryMeta.InstallationPolicy -ine 'Trusted') {
 	Write-Host -Object 'Tweak PowerShell repository configuration.'
 	Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted' -Verbose:$IsDebugMode
 }
+Write-Host -Object 'Setup toolkit.'
 Try {
 	$ToolkitInstalledPrevious = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease -ErrorAction 'SilentlyContinue'
 	If ($InputUninstall) {
@@ -129,7 +137,7 @@ Catch {
 }
 $ToolkitInstalledCurrent = Get-InstalledModule -Name 'hugoalh.GitHubActionsToolkit' -AllVersions -AllowPrerelease -ErrorAction ($InputUninstall ? 'Continue' : 'Stop')
 $ToolkitInstalledCurrent |
-	Format-List -Property @('Version', 'PublishedDate', 'InstalledDate', 'UpdatedDate', 'Dependencies', 'RepositorySourceLocation', 'Repository', 'PackageManagementProvider', 'InstalledLocation')
+	Format-List -Property @('Version', 'PublishedDate', 'InstalledDate', 'UpdatedDate', 'Dependencies', 'PackageManagementProvider', 'InstalledLocation')
 If ($Null -ne $ToolkitInstalledCurrent) {
 	Add-Content -LiteralPath $Env:GITHUB_OUTPUT -Value @(
 		"path=$($ToolkitInstalledCurrent.InstalledLocation)",
