@@ -5,6 +5,7 @@ on:
 jobs:
   main:
     name: "${{matrix.os}}"
+    permissions: {}
     runs-on: "${{matrix.os}}"
     strategy:
       matrix:
