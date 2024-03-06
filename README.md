@@ -1,31 +1,50 @@
 # Setup PowerShell Toolkit (GitHub Action)
 
-[⚖️ MIT](./LICENSE.md)
+[**⚖️** MIT](./LICENSE.md)
 
-|  | **Release - Latest** | **Release - Pre** |
-|:-:|:-:|:-:|
-| [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=ffffff&style=flat-square "GitHub")](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction) | ![GitHub Latest Release Version](https://img.shields.io/github/release/hugoalh-studio/setup-powershell-toolkit-ghaction?sort=semver&label=&style=flat-square "GitHub Latest Release Version") (![GitHub Latest Release Date](https://img.shields.io/github/release-date/hugoalh-studio/setup-powershell-toolkit-ghaction?label=&style=flat-square "GitHub Latest Release Date")) | ![GitHub Latest Pre-Release Version](https://img.shields.io/github/release/hugoalh-studio/setup-powershell-toolkit-ghaction?include_prereleases&sort=semver&label=&style=flat-square "GitHub Latest Pre-Release Version") (![GitHub Latest Pre-Release Date](https://img.shields.io/github/release-date-pre/hugoalh-studio/setup-powershell-toolkit-ghaction?label=&style=flat-square "GitHub Latest Pre-Release Date")) |
+**🗂️**
+[![GitHub: hugoalh-studio/setup-powershell-toolkit-ghaction](https://img.shields.io/badge/hugoalh--studio/setup--powershell--toolkit--ghaction-181717?logo=github&logoColor=ffffff&style=flat "GitHub: hugoalh-studio/setup-powershell-toolkit-ghaction")](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction)
+
+**🆙** ![Latest Release Version](https://img.shields.io/github/release/hugoalh-studio/setup-powershell-toolkit-ghaction?sort=semver&color=2187C0&label=&style=flat "Latest Release Version") (![Latest Release Date](https://img.shields.io/github/release-date/hugoalh-studio/setup-powershell-toolkit-ghaction?color=2187C0&label=&style=flat "Latest Release Date"))
 
 A GitHub Action to setup PowerShell module `hugoalh.GitHubActionsToolkit` ([GitHub](https://github.com/hugoalh-studio/ghactions-toolkit-powershell))([PowerShell Gallery](https://www.powershellgallery.com/packages/hugoalh.GitHubActionsToolkit)).
 
 > [!IMPORTANT]
 > This documentation is v2.0.0 based; To view other version's documentation, please visit the [versions list](https://github.com/hugoalh-studio/setup-powershell-toolkit-ghaction/tags) and select the correct version.
 
-## 🔰 Begin
+## 🎯 Target
 
-### GitHub Actions
+- GitHub Actions Runner
+  > **🛡️ Require Permission**
+  >
+  > *N/A*
 
-- **Target Version:** Runner >= v2.311.0, &:
-  - PowerShell >= v7.2.0
-- **Require Permission:** *N/A*
+  > **💽 Require Software**
+  >
+  > - PowerShell >= v7.2.0
 
-```yml
-jobs:
-  job_id:
-    runs-on: "________" # Any
-    steps:
-      - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@<Tag>"
-```
+## 🔰 Usage
+
+### Composite Action
+
+1. Import at the metadata (`action.yml`):
+    ```yml
+    runs:
+      using: "composite"
+      steps:
+        - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@<Tag>"
+    ```
+
+### Workflow
+
+1. Import at the workflow (`.github/workflows/<WorkflowName>.yml`):
+    ```yml
+    jobs:
+      job_id:
+        runs-on: "________" # Any
+        steps:
+          - uses: "hugoalh-studio/setup-powershell-toolkit-ghaction@<Tag>"
+    ```
 
 ## 🧩 Input
 
