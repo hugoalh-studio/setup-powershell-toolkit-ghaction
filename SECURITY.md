@@ -2,18 +2,31 @@
 
 ## Supported Versions
 
-> | **Legend** | **Description** |
-> |:-:|:--|
-> | 🟤 | Pending / Pre Release / Unstable |
-> | 🔵 | Current Release |
-> | 🟢 | Long Term Support |
-> | 🟠 | Maintenance |
-> | 🔴 | End Of Life / Not Supported |
+> ```mermaid
+> ---
+> title: Versions Status Flow
+> ---
+> flowchart LR
+>   Unstable("Unstable")
+>   Pre("Pre Release")
+>   Release("Release")
+>   LTS("Long Term Support")
+>   Maintenance("Maintenance")
+>   EOL("End Of Life / Not Supported")
+>   Unstable --> Pre
+>   Pre --> Release
+>   subgraph Support
+>     Release -- Major = 0 --> Maintenance
+>     Release -- Major > 0 --> LTS
+>     LTS --> Maintenance
+>   end
+>   Maintenance --> EOL
+> ```
 
-| **Versions** | **Status** | **🔵 Date** | **🟢 Date** | **🔴 Date** | **Target - GitHub Actions Runner** | **Target - PowerShell** |
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| v2.X.X | 🟢 | 2024-01-17 | 2024-02-01 | *Unknown* | >= v2.311.0 | >= v7.2.0 |
-| v1.X.X | 🟠 | *N/A* | 2023-09-01 | 2024-05-01 | >= v2.303.0 | >= v7.2.0 |
+| **Versions** | **Release Date** | **Long Term Support Date** | **End Of Life Date / Not Supported Date** |
+|:-:|:-:|:-:|:-:|
+| v2.X.X | 2024-01-17 | 2024-02-01 | *Unknown* |
+| v1.X.X | *N/A* | 2023-09-01 | 2024-05-01 |
 
 > **ℹ️ Note**
 >
